@@ -20,8 +20,7 @@ public class RegistrationView {
     protected Button cancelButton;
     protected Button doneButton;
 
-    private Scene scene;
-    private FlowPane rootLayout;
+    private final Scene scene;
 
     public RegistrationView() {
         usernameInput = new TextField();
@@ -35,8 +34,7 @@ public class RegistrationView {
         emailInput.setPromptText("Эл. почта");
         passwordInput.setPromptText("Пароль");
 
-        Image image = new Image(getClass().getResourceAsStream("/images/person.png"), 100, 100, false, false);
-
+        Image image = new Image(getClass().getResourceAsStream("/images/whiteuser.png"), 100, 100, false, false);
         selectImageButton.setGraphic(new ImageView(image));
         selectImageButton.setContentDisplay(ContentDisplay.TOP);
 
@@ -53,7 +51,7 @@ public class RegistrationView {
             buttonLayout
         );
 
-        rootLayout = new FlowPane();
+        FlowPane rootLayout = new FlowPane();
         rootLayout.setAlignment(Pos.CENTER);
         rootLayout.getChildren().addAll(inputLayout);
 
@@ -62,25 +60,5 @@ public class RegistrationView {
 
     public Scene getScene() {
         return this.scene;
-    }
-
-    public TextField getUsernameInput() {
-        return this.usernameInput;
-    }
-
-    public TextField getEmailInput() {
-        return this.emailInput;
-    }
-
-    public PasswordField getPasswordInput() {
-        return this.passwordInput;
-    }
-
-    public Button getSelectImageButton() {
-        return this.selectImageButton;
-    }
-
-    public Button getCancelButton() {
-        return this.cancelButton;
     }
 }

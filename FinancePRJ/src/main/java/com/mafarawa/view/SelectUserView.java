@@ -1,12 +1,11 @@
 package com.mafarawa.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,7 @@ public class SelectUserView {
 	protected Button registrationButton;
 	protected ArrayList<Button> userButtons;
 
-	private Scene scene;
+	private final Scene scene;
 	private VBox rootLayout;
 
 	public SelectUserView() {
@@ -28,11 +27,7 @@ public class SelectUserView {
 		scene = new Scene(rootLayout, 1000, 600);
 	}
 
-	public Button getRegistrationButton() {
-		return this.registrationButton;
-	}
-
-	public Scene getScene() { 
+	public Scene getScene() {
 		return this.scene; 
 	}
 

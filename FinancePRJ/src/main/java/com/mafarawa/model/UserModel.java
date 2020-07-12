@@ -8,18 +8,17 @@ public class UserModel {
 	private String password;
 	private Image image;
 
-	public UserModel(String imagePath) {
-		this.name = "";
-		this.email = "";
-		this.password = "";
-		image = new Image(getClass().getResourceAsStream(imagePath), 100, 100, false, false);
-	}
-
-	public UserModel(String name, String email, String password, String imagePath) {
+	public UserModel(String name, String email, String password) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		image = new Image(getClass().getResourceAsStream(imagePath), 100, 100, false, false);
+	}
+
+	public UserModel(String name, String email, String password, String image) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
 	}
 
 	public String getName() {
@@ -40,5 +39,7 @@ public class UserModel {
 
 	public void setPassword(String password) { this.password = password; }
 
-	public void setImage(Image image) { this.image = image; }
+	public void setImage(String image) {
+		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
+	}
 }

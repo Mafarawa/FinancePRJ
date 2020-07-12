@@ -1,15 +1,15 @@
 package com.mafarawa;
 
-import com.mafarawa.controller.SelectUserController;
 import com.mafarawa.controller.RegistrationController;
+import com.mafarawa.controller.SelectUserController;
 import com.mafarawa.model.SelectScene;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class App extends Application {
     private SelectUserController suc;

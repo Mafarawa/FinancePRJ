@@ -3,6 +3,7 @@ package com.mafarawa.controller;
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.SelectScene;
+import com.mafarawa.model.UserImage;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.view.SelectUserView;
 
@@ -27,75 +28,35 @@ public class SelectUserController extends SelectUserView {
 		super.displayUsers();
 	}
 
-	private void copy(File target, File dest) throws IOException {
-		InputStream in = new BufferedInputStream(new FileInputStream(target));
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = in.read(buffer)) > 0) {
-			out.write(buffer, 0, length);
-			out.flush();
-		}
-
-		in.close();
-		out.close();
-	}
-
-	private void getIconForUser() {
-		DBGate dbgate = DBGate.getInstance();
-		ResultSet rs = null;
-
-		try {
-			rs = dbgate.executeData("SELECT icon.dir, icon.name FROM icon;");
-			while(rs.next()) {
-				String imagePath = rs.getString(1);
-				String imageName = rs.getString(2);
-				System.out.println("ICON DATA SELECTED");
-
-				File image = new File(imagePath + imageName);
-				File dest = new File("/home/valera/Рабочий стол/FinancePRJ/avatars/Пенисита.jpeg");
-
-				try {
-					copy(image, dest);
-					System.out.println("ICON COPIED");
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				assert rs != null;
-				rs.close();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void getUsersToDisplay() {
-		getIconForUser();
-
 		DBGate dbgate = DBGate.getInstance();
 
 		try {
-			ResultSet rs = dbgate.executeData("SELECT userfp.name, userfp.email, userfp.password, icon.dir, icon.name FROM userfp JOIN icon ON userfp.userfp_icon_id=icon.icon_id;");
+			ResultSet rs = dbgate.executeData("SELECT userfp.name, userfp.email, userfp.password, userfp.image FROM userfp;");
 			while(rs.next()) {
 				String name = rs.getString(1);
 				String email = rs.getString(2);
 				String password = rs.getString(3);
-				String imagePath = rs.getString(4);
-				String imageName = rs.getString(5);
+				String image = rs.getString(4);
 				System.out.println("USER DATA SELECTED");
 
 				System.out.println("name: " + name);
 				System.out.println("email: " + email);
 				System.out.println("password: " + password);
-				System.out.println("image: " + imagePath + imageName);
+				System.out.println("image: " + image);
 
-				users.add(new UserModel(name, email, password, "/home/valera/Рабочий Стол/FinancePRJ/avatars/" + imageName));
+				UserModel user = new UserModel(name, email, password);
+				switch(image) {
+					case "/images/blackuser.png" 	: user.setImage(UserImage.BLACK_USER.getImage()); break;
+					case "/images/blueuser.png" 	: user.setImage(UserImage.BLUE_USER.getImage()); break;
+					case "/images/greenuser.png" 	: user.setImage(UserImage.GREEN_USER.getImage()); break;
+					case "/images/reduser.png" 		: user.setImage(UserImage.RED_USER.getImage()); break;
+					case "/images/whiteuser.png"	: user.setImage(UserImage.WHITE_USER.getImage()); break;
+					case "/images/yellowuser.png" 	: user.setImage(UserImage.YELLOW_USER.getImage()); break;
+					default							: user.setImage(UserImage.WHITE_USER.getImage()); break;
+				}
+
+				users.add(user);
 				System.out.println("USER DISPLAYED");
 			}
 		} catch(Exception e) {
