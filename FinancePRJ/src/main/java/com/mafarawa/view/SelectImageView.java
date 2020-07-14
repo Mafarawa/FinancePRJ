@@ -1,7 +1,7 @@
 package com.mafarawa.view;
 
 import com.mafarawa.model.UserImage;
-
+import com.mafarawa.model.UserModel;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,12 +22,24 @@ public class SelectImageView {
     protected Button yellowUserButton;
 
     public SelectImageView(Stage stage) {
-         blackUserButton = new Button("", new ImageView(new Image(UserImage.BLACK_USER.getImage(), 100, 100, false, false)));
-         blueUserButton = new Button("", new ImageView(new Image(UserImage.BLUE_USER.getImage(), 100, 100, false, false)));
-         greenUserButton = new Button("", new ImageView(new Image(UserImage.GREEN_USER.getImage(), 100, 100, false, false)));
-         redUserButton = new Button("", new ImageView(new Image(UserImage.RED_USER.getImage(), 100, 100, false, false)));
-         whiteUserButton = new Button("", new ImageView(new Image(UserImage.WHITE_USER.getImage(), 100, 100, false, false)));
-         yellowUserButton = new Button("", new ImageView(new Image(UserImage.YELLOW_USER.getImage(), 100, 100, false, false)));
+        blackUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.BLACK_USER.getImage()), 100, 100, false, false)
+        ));
+        blueUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.BLUE_USER.getImage()), 100, 100, false, false)
+        ));
+        greenUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.GREEN_USER.getImage()), 100, 100, false, false)
+        ));
+        redUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.RED_USER.getImage()), 100, 100, false, false)
+        ));
+        whiteUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.WHITE_USER.getImage()), 100, 100, false, false)
+        ));
+        yellowUserButton = new Button("", new ImageView(
+                new Image(getClass().getResourceAsStream(UserImage.YELLOW_USER.getImage()), 100, 100, false, false)
+        ));
 
         GridPane selectImageLayout = new GridPane();
         selectImageLayout.setHgap(20);

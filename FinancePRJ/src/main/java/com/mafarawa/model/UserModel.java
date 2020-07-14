@@ -1,24 +1,25 @@
 package com.mafarawa.model;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class UserModel {
+	private int id;
 	private String name;
 	private String email;
 	private String password;
 	private Image image;
-
-	public UserModel(String name, String email, String password) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-	}
+	private Button avatar;
 
 	public UserModel(String name, String email, String password, String image) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
+		this.avatar = new Button(name, new ImageView(this.image));
+		this.avatar.setContentDisplay(ContentDisplay.TOP);
 	}
 
 	public String getName() {
@@ -29,17 +30,7 @@ public class UserModel {
 		return this.email;
 	}
 
-	public String getPassword() { return this.password; }
-
 	public Image getImage() { return this.image; }
 
-	public void setName(String name) { this.name = name; }
-
-	public void setEmail(String email) { this.email = email; }
-
-	public void setPassword(String password) { this.password = password; }
-
-	public void setImage(String image) {
-		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
-	}
+	public Button getAvatar() { return this.avatar; }
 }

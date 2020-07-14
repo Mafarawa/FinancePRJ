@@ -1,7 +1,5 @@
 package com.mafarawa.model;
 
-import javafx.scene.image.Image;
-
 public enum UserImage {
     BLACK_USER("/images/blackuser.png"),
     BLUE_USER("/images/blueuser.png"),
@@ -17,6 +15,6 @@ public enum UserImage {
     }
 
     public String getImage() {
-        return this.image;
+        return image;
     }
 }
