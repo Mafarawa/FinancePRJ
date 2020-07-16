@@ -1,6 +1,5 @@
 package com.mafarawa;
 
-import com.mafarawa.controller.AutorizationController;
 import com.mafarawa.controller.RegistrationController;
 import com.mafarawa.controller.SelectUserController;
 import com.mafarawa.model.SelectScene;

@@ -3,18 +3,22 @@ package com.mafarawa.controller;
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.SelectScene;
+import com.mafarawa.model.UserModel;
 import com.mafarawa.view.RegistrationView;
+import com.mafarawa.dialog.SelectImageDialog;
 
 import javafx.stage.Stage;
-
 import java.sql.PreparedStatement;
+import org.apache.log4j.Logger;
 
 public class RegistrationController extends RegistrationView {
-	private SelectImageController sic;
+	private SelectImageDialog sic;
+	private static Logger logger;
+	static { logger = Logger.getLogger(RegistrationController.class.getName()); }
 
 	public RegistrationController(Stage stage) {
 		super();
-		sic = new SelectImageController(stage, super.selectImageButton);
+		sic = new SelectImageDialog(stage, super.selectImageButton);
 
 		super.selectImageButton.setOnAction(e -> sic.getStage().show());
 		super.doneButton.setOnAction(e -> registerUser());
@@ -22,14 +26,12 @@ public class RegistrationController extends RegistrationView {
 	}
 
 	private void registerUser() {
-		System.out.println("REGISTERING...");
 		String username = super.usernameInput.getText();
 		String email = super.emailInput.getText();
 		String password = Integer.toHexString(super.passwordInput.getText().hashCode());
 		String userImage = sic.getUserImageValue();
 
 		DBGate dbGate = DBGate.getInstance();
-		System.out.println("INSTANCE ACHIEVED");
 
 		try {
 			PreparedStatement statement = dbGate.getDatabase().prepareStatement("INSERT INTO userfp (name, email, password, image) VALUES(?, ?, ?, ?)");
@@ -38,9 +40,11 @@ public class RegistrationController extends RegistrationView {
 			statement.setString(3, password);
 			statement.setString(4, userImage);
 			dbGate.insertData(statement);
-			System.out.println("USER INSERTED");
+
+			UserModel user = new UserModel(username, email, password, userImage);
+			logger.info("user inserted: " + "\n" + user.toString());
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 	}
 }

@@ -2,9 +2,14 @@ package com.mafarawa.connect;
 
 import java.sql.*;
 
+import org.apache.log4j.Logger;
+
 public class DBGate {
+	private static Logger logger;
 	private static DBGate instance;
 	private Connection database;
+
+	static { logger = Logger.getLogger(DBGate.class.getName()); }
 
 	private DBGate() {}
 
@@ -13,6 +18,7 @@ public class DBGate {
 			instance = new DBGate();
 		}
 
+		logger.info("Instance of DBGate achieved");
 		return instance;
 	}
 
@@ -24,11 +30,13 @@ public class DBGate {
 						"gosha",
 						"mafarawa228"
 				);
+				logger.info("Database connected");
 			} catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception", e);
 			}
 		}
 
+		logger.info("Database achieved");
 		return database;
 	}
 
@@ -39,6 +47,7 @@ public class DBGate {
 
 		Statement statement = database.createStatement();
 		ResultSet rs = statement.executeQuery(query);
+		logger.info("ResultSet executed");
 
 		return rs;
 	}
@@ -49,5 +58,6 @@ public class DBGate {
 		}
 
 		ps.executeUpdate();
+		logger.info("PreparedStatement executed");
 	}
 }

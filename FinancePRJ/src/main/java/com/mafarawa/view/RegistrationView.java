@@ -1,16 +1,16 @@
 package com.mafarawa.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
+import javafx.scene.layout.VBox;
 
 public class RegistrationView {
     protected TextField usernameInput;
@@ -19,7 +19,6 @@ public class RegistrationView {
     protected Button selectImageButton;
     protected Button cancelButton;
     protected Button doneButton;
-
     private final Scene scene;
 
     public RegistrationView() {
