@@ -2,10 +2,7 @@ package com.mafarawa.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -13,15 +10,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class RegistrationView {
+    protected Label checkLabel;
     protected TextField usernameInput;
     protected TextField emailInput;
     protected PasswordField passwordInput;
     protected Button selectImageButton;
     protected Button cancelButton;
     protected Button doneButton;
+    protected VBox inputLayout;
     private final Scene scene;
 
     public RegistrationView() {
+        checkLabel = new Label();
         usernameInput = new TextField();
         emailInput = new TextField();
         passwordInput = new PasswordField();
@@ -40,7 +40,7 @@ public class RegistrationView {
         HBox buttonLayout = new HBox(50);
         buttonLayout.getChildren().addAll(cancelButton, doneButton);
 
-        VBox inputLayout = new VBox(20);
+        inputLayout = new VBox(20);
         inputLayout.setAlignment(Pos.CENTER);
         inputLayout.getChildren().addAll(
             selectImageButton,
