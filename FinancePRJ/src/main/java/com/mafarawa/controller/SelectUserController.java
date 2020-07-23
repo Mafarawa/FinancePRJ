@@ -29,14 +29,13 @@ public class SelectUserController extends SelectUserView {
 		for(int i = 0; i < users.size(); i++) {
 			int i_ = i;
 			super.userButtons.get(i).setOnAction(e -> new AutorizationDialog(stage, users.get(i_)).getStage().show());
-			logger.debug("Users on screen");
 		}
 	}
 
 	private void displayUsers(UserModel user) {
 		super.userButtons.add(user.getAvatar());
 		super.userLayout.getChildren().add(user.getAvatar());
-		logger.info("User displayed");
+		logger.info("User: " + user.getName() + " on screen");
 	}
 
 	private void getUsersToDisplay() {
@@ -53,8 +52,6 @@ public class SelectUserController extends SelectUserView {
 				UserModel user = new UserModel(name, email, password, image);
 				users.add(user);
 				displayUsers(user);
-
-				System.out.println("USER DISPLAYED");
 			}
 		} catch(Exception e) {
 			logger.error("Exception: ", e);

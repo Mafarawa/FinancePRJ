@@ -1,7 +1,6 @@
 package com.mafarawa.connect;
 
 import java.sql.*;
-
 import org.apache.log4j.Logger;
 
 public class DBGate {
@@ -47,7 +46,7 @@ public class DBGate {
 
 		Statement statement = database.createStatement();
 		ResultSet rs = statement.executeQuery(query);
-		logger.info("ResultSet executed");
+		logger.debug("ResultSet executed this query: " + query);
 
 		return rs;
 	}

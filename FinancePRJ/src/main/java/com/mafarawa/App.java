@@ -7,7 +7,6 @@ import com.mafarawa.model.SelectScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.util.HashMap;
 import java.util.Map;
 
