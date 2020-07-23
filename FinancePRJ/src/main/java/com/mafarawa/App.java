@@ -2,6 +2,7 @@ package com.mafarawa;
 
 import com.mafarawa.controller.RegistrationController;
 import com.mafarawa.controller.SelectUserController;
+import com.mafarawa.main.MainWindow;
 import com.mafarawa.model.SelectScene;
 
 import javafx.application.Application;
