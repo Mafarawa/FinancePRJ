@@ -13,6 +13,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import com.mafarawa.model.UserImage;
+
 public class RegistrationView {
     protected Label checkLabel;
     protected TextField usernameInput;
@@ -37,7 +39,7 @@ public class RegistrationView {
         emailInput.setPromptText("Эл. почта");
         passwordInput.setPromptText("Пароль");
 
-        Image image = new Image(getClass().getResourceAsStream("/images/whiteuser.png"), 100, 100, false, false);
+        Image image = new Image(getClass().getResourceAsStream(UserImage.WHITE_USER.getImage()), 100, 100, false, false);
         selectImageButton.setGraphic(new ImageView(image));
         selectImageButton.setContentDisplay(ContentDisplay.TOP);
 
