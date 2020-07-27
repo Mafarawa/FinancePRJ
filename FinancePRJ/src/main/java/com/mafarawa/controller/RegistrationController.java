@@ -30,32 +30,30 @@ public class RegistrationController extends RegistrationView {
 		String email = super.emailInput.getText();
 		String password = Integer.toHexString(super.passwordInput.getText().hashCode());
 		String userImage = sic.getUserImageValue();
+		long shukherCode = UserModel.createShukherCode(username, email, password);
 
 		if(username.isEmpty() || email.isEmpty() || password.isEmpty()) {
 			checkLabel.setText("Заполните все поля");
 			super.inputLayout.getChildren().add(checkLabel);
 		} else {
-			register(new UserModel(username, email, password, userImage));
+			DBGate dbGate = DBGate.getInstance();
+
+			try {
+				PreparedStatement statement = dbGate.getDatabase().prepareStatement("INSERT INTO userfp (name, email, password, image, shukher_code) VALUES(?, ?, ?, ?, ?)");
+				statement.setString(1, username);
+				statement.setString(2, email);
+				statement.setString(3, password);
+				statement.setString(4, userImage);
+				statement.setLong(5, shukherCode);
+				dbGate.insertData(statement);
+
+				logger.info("user inserted: " + username + ", " + email + ", " + 
+							password + ", " + userImage + ", " + shukherCode);
+			} catch(Exception e) {
+				logger.error("Exception: ", e);
+			}
+
+			super.checkLabel.setText("Проверте свою Эл. почту");
 		}
-	}
-
-	private void register(UserModel user) {
-		DBGate dbGate = DBGate.getInstance();
-
-		try {
-			PreparedStatement statement = dbGate.getDatabase().prepareStatement("INSERT INTO userfp (name, email, password, image, shukher_code) VALUES(?, ?, ?, ?, ?)");
-			statement.setString(1, user.getName());
-			statement.setString(2, user.getEmail());
-			statement.setString(3, user.getPassword());
-			statement.setString(4, user.getImageName());
-			statement.setLong(5, user.getShukherCode());
-			dbGate.insertData(statement);
-
-			logger.info("user inserted: " + "\n" + user.toString());
-		} catch(Exception e) {
-			logger.error("Exception: ", e);
-		}
-
-		super.checkLabel.setText("Проверте свою Эл. почту");
 	}
 }
