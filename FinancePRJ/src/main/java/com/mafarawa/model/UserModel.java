@@ -31,7 +31,7 @@ public class UserModel implements Cloneable {
 		this.email = email;
 		this.password = password;
 		this.imageName = image;
-		this.shukherCode = createShukherCode();
+		this.shukherCode = createShukherCode(name, email, password);
 		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
 		avatar = new Button(name, new ImageView(this.image));
 		avatar.setContentDisplay(ContentDisplay.TOP);
@@ -39,29 +39,25 @@ public class UserModel implements Cloneable {
 		logger.debug("New UserModel: " + this.toString());
 	}
 
-	public int createShukherCode() {
-		logger.debug("ShukherCode will be created with username: " + this.name + ", email: " + this.email + ", password: " + this.password);
-
-		int[] nameArr = new int[this.name.length()];
-		for(int i = 0; i < this.name.length(); i++) {
-			nameArr[i] = this.name.charAt(i);
+	public static int createShukherCode(String name, String email, String password) {
+		int[] nameArr = new int[name.length()];
+		for(int i = 0; i < name.length(); i++) {
+			nameArr[i] = name.charAt(i);
 		}
 
-		int[] emailArr = new int[this.email.length()];
-		for(int i = 0; i < this.email.length(); i++) {
-			emailArr[i] = this.email.charAt(i);
+		int[] emailArr = new int[email.length()];
+		for(int i = 0; i < email.length(); i++) {
+			emailArr[i] = email.charAt(i);
 		}
 
-		int[] passwordArr = new int[this.password.length()];
-		for(int i = 0; i < this.password.length(); i++) {
-			passwordArr[i] = this.password.charAt(i);
+		int[] passwordArr = new int[password.length()];
+		for(int i = 0; i < password.length(); i++) {
+			passwordArr[i] = password.charAt(i);
 		}
 
 		String code = nameArr.toString() + passwordArr.toString() + emailArr.toString();
 		String leftSide = code.substring(0, code.length() / 2);
 		String rightSide = code.substring(code.length() / 2, code.length() - 1);
-
-		logger.debug("Code to cypher: " + code);
 
 		int[] shukherCodeArr = new int[6];
 		shukherCodeArr[0] = leftSide.charAt(0);
