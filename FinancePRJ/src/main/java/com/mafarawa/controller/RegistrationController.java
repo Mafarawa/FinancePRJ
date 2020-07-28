@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 public class RegistrationController extends RegistrationView {
 	private SelectImageDialog sic;
+	
 	private static Logger logger;
 	static { logger = Logger.getLogger(RegistrationController.class.getName()); }
 

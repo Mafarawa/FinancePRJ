@@ -7,15 +7,15 @@ import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.view.SelectUserView;
 
-import javafx.stage.Stage;
-
-import org.apache.log4j.Logger;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import org.apache.log4j.Logger;
 
 public class SelectUserController extends SelectUserView {
 	private ArrayList<UserModel> users;
+	
 	private static Logger logger;
 	static { logger = Logger.getLogger(SelectUserController.class.getName()); }
 
@@ -33,8 +33,10 @@ public class SelectUserController extends SelectUserView {
 	}
 
 	private void displayUsers(UserModel user) {
-		super.userButtons.add(user.getAvatar());
-		super.userLayout.getChildren().add(user.getAvatar());
+		Button avatar = user.getAvatar();
+
+		super.userButtons.add(avatar);
+		super.userLayout.getChildren().add(avatar);
 		logger.info("User: " + user.getName() + " on screen");
 	}
 
