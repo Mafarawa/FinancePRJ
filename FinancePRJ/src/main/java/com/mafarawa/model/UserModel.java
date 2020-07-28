@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import java.util.Arrays;
 import org.apache.log4j.Logger;
 
 public class UserModel implements Cloneable {
@@ -55,7 +56,7 @@ public class UserModel implements Cloneable {
 			passwordArr[i] = password.charAt(i);
 		}
 
-		String code = nameArr.toString() + passwordArr.toString() + emailArr.toString();
+		String code = Arrays.toString(nameArr) + Arrays.toString(passwordArr) + Arrays.toString(emailArr);
 		String leftSide = code.substring(0, code.length() / 2);
 		String rightSide = code.substring(code.length() / 2, code.length() - 1);
 
