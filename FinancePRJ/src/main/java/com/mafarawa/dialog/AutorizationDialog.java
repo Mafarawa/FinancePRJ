@@ -25,6 +25,7 @@ public class AutorizationDialog {
     private VBox inputLayout;
     private Stage childStage;
     private Scene scene;
+    
     private static Logger logger;
     static { logger = Logger.getLogger(AutorizationDialog.class.getName()); }
 

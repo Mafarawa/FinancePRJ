@@ -36,6 +36,7 @@ public class DropPasswordDialog {
     private Button doneButton;
     private Scene scene;
     private Stage stage;
+    
     private static Logger logger;
     static { logger = Logger.getLogger(DropPasswordDialog.class.getName()); }
 
@@ -76,7 +77,6 @@ public class DropPasswordDialog {
 
 
         shukherCodeInput.setOnKeyReleased(e -> {
-            System.out.println("action <pe></pe>rformed");
             valueInput = 0;
             valueInput = Integer.parseInt(shukherCodeInput.getText());
             permission = checkShukherCode(valueInput, user.getName());
