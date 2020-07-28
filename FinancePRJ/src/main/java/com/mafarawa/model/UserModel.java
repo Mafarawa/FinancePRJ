@@ -8,14 +8,12 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 
 public class UserModel implements Cloneable {
-	private int id;
 	private String name;
 	private String email;
 	private String password;
 	private String imageName;
 	private long shukherCode;
-	private Image image;
-	private Button avatar;
+
 	private static Logger logger;
 	static { logger = Logger.getLogger(UserModel.class.getName()); }
 
@@ -33,9 +31,6 @@ public class UserModel implements Cloneable {
 		this.password = password;
 		this.imageName = image;
 		this.shukherCode = createShukherCode(name, email, password);
-		this.image = new Image(getClass().getResourceAsStream(image), 100, 100, false, false);
-		avatar = new Button(name, new ImageView(this.image));
-		avatar.setContentDisplay(ContentDisplay.TOP);
 
 		logger.debug("New UserModel: " + this.toString());
 	}
@@ -87,16 +82,16 @@ public class UserModel implements Cloneable {
 	}
 
 	public Button cloneUserAvatar() {
-		Button avatar = new Button(this.name, new ImageView(image));
+		Button avatar = new Button(this.name, new ImageView(new Image(getClass().getResourceAsStream(this.imageName), 100, 100, false, false)));
 		avatar.setContentDisplay(ContentDisplay.TOP);
 		logger.info("UserAvatar clone created");
+		
 		return avatar;
 	}
 
 	@Override
 	public String toString() {
-		String str = "id: " + this.id + " " +
-				 	 "name: " + this.name + " " +
+		String str = "name: " + this.name + " " +
 					 "email: " + this.email + " " +
 					 "password: " + this.password + " " +
 					 "image: " + this.imageName + " " +
@@ -105,17 +100,23 @@ public class UserModel implements Cloneable {
 		return str;
 	}
 
+	public Button getAvatar() {
+		Image image = new Image(getClass().getResourceAsStream(this.imageName), 100, 100, false, false);
+		Button avatar = new Button(name, new ImageView(image));
+		avatar.setContentDisplay(ContentDisplay.TOP);
+
+		return avatar;
+	}
+
 	public String getName() { return this.name; }
 	public String getEmail() { return this.email; }
 	public String getPassword() { return this.password; }
 	public String getImageName() { return this.imageName; }
 	public long getShukherCode() { return this.shukherCode; }
-	public Button getAvatar() { return this.avatar; }
 
 	public void setName(String name) { this.name = name; }
 	public void setEmail(String email) { this.name = email; }
 	public void setPassword(String password) { this.password = password; }
 	public void setImageName(String imageName) { this.imageName = imageName; }
 	public void setShukherCode(long shukherCode) { this.shukherCode = shukherCode; }
-	public void setAvatar(Button avatar) { this.avatar = avatar; }
 }
