@@ -164,6 +164,8 @@ public class DropPasswordDialog {
             }
 
             logger.info("Password changed");
+
+            this.stage.close();
         }
     }
 
