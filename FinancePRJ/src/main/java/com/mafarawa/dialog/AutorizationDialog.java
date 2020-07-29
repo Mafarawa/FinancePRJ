@@ -4,6 +4,7 @@ import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.App;
+
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
