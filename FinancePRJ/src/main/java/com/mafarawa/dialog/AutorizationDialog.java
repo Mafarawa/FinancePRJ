@@ -2,7 +2,8 @@ package com.mafarawa.dialog;
 
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
-
+import com.mafarawa.model.SelectScene;
+import com.mafarawa.App;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.sql.ResultSet;
 import org.apache.log4j.Logger;
-
 
 public class AutorizationDialog {
     private Button userAvatar;
@@ -57,7 +57,7 @@ public class AutorizationDialog {
         childStage.setScene(scene);
 
         setUserAvatar(user.cloneUserAvatar());
-        doneButton.setOnAction(e -> autorizeUser(user.getName()));
+        doneButton.setOnAction(e -> autorizeUser(user.getName(), stage));
         dropPasswordButton.setOnAction(e -> new DropPasswordDialog(childStage, user));
     }
 
@@ -67,7 +67,7 @@ public class AutorizationDialog {
         inputLayout.getChildren().add(0, userAvatar);
     }
 
-    private void autorizeUser(String username) {
+    private void autorizeUser(String username, Stage stage) {
         DBGate dbGate = DBGate.getInstance();
         String passwordInputValue = Integer.toHexString(passwordInput.getText().hashCode());
 
@@ -77,6 +77,8 @@ public class AutorizationDialog {
             ResultSet rs = dbGate.executeData("SELECT userfp.password FROM userfp WHERE userfp.name='" + username + "';");
             while (rs.next()) {
                 if(passwordInputValue.equals(rs.getString(1))) {
+                    stage.setScene(App.selectScene(SelectScene.MAIN_WINDOW));
+                    childStage.close();
                     logger.info("CORRECT PASSWORD");
                 } else {
                     logger.info("WRONG PASSWORD");
