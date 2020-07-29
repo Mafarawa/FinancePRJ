@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 public class SelectUserController extends SelectUserView {
 	private ArrayList<UserModel> users;
+	private ArrayList<AutorizationDialog> authDialogs;
 	
 	private static Logger logger;
 	static { logger = Logger.getLogger(SelectUserController.class.getName()); }
@@ -22,13 +23,18 @@ public class SelectUserController extends SelectUserView {
 	public SelectUserController(Stage stage) {
 		super();
 
+		authDialogs = new ArrayList<>();
 		users = new ArrayList<>();
 		getUsersToDisplay();
+
+		for(int i = 0; i < users.size(); i++) {
+			authDialogs.add(new AutorizationDialog(stage, users.get(i)));
+		}
 
 		super.registrationButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.REGISTRATION_SCENE)));
 		for(int i = 0; i < users.size(); i++) {
 			int i_ = i;
-			super.userButtons.get(i).setOnAction(e -> new AutorizationDialog(stage, users.get(i_)).getStage().show());
+			super.userButtons.get(i).setOnAction(e -> authDialogs.get(i_).getStage().show());
 		}
 	}
 
