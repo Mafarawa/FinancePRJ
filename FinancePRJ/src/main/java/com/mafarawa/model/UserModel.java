@@ -1,10 +1,13 @@
 package com.mafarawa.model;
 
+import com.mafarawa.model.AccountModel;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.Arrays;
+import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 public class UserModel implements Cloneable {
@@ -13,6 +16,7 @@ public class UserModel implements Cloneable {
 	private String password;
 	private String imageName;
 	private long shukherCode;
+	private ArrayList<AccountModel> accounts;
 
 	private static Logger logger;
 	static { logger = Logger.getLogger(UserModel.class.getName()); }
@@ -26,6 +30,7 @@ public class UserModel implements Cloneable {
 	}
 
 	public UserModel(String name, String email, String password, String image) {
+		this.accounts = new ArrayList<>();
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -113,6 +118,7 @@ public class UserModel implements Cloneable {
 	public String getPassword() { return this.password; }
 	public String getImageName() { return this.imageName; }
 	public long getShukherCode() { return this.shukherCode; }
+	public ArrayList<AccountModel> getAccounts() { return this.accounts; }
 
 	public void setName(String name) { this.name = name; }
 	public void setEmail(String email) { this.name = email; }
