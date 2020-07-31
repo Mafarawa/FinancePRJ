@@ -4,11 +4,13 @@ import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
+import com.mafarawa.model.AccountType;
 import com.mafarawa.view.RegistrationView;
 import com.mafarawa.dialog.SelectImageDialog;
 
 import javafx.stage.Stage;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 public class RegistrationController extends RegistrationView {
@@ -24,6 +26,19 @@ public class RegistrationController extends RegistrationView {
 		super.selectImageButton.setOnAction(e -> sic.getStage().show());
 		super.doneButton.setOnAction(e -> registerUser());
 		super.cancelButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.SELECT_USER_SCENE)));
+	}
+
+	private void registerAccounts(int user_id) {
+		logger.debug("User id = " + user_id);
+
+		DBGate dbGate = DBGate.getInstance();
+
+		try {
+			dbGate.insertData("INSERT INTO account (account_id, name, type, balance) VALUES (" + user_id + ", 'Карта', " + "'" + AccountType.CARD_ACCOUNT.getAccountType() + "'" + ", 0);");
+			dbGate.insertData("INSERT INTO account (account_id, name, type, balance) VALUES (" + user_id + ", 'Наличные', " + "'" + AccountType.CURRENT_ACCOUNT.getAccountType() + "'" + ", 0);");
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
 	}
 
 	private void registerUser() {
@@ -50,6 +65,13 @@ public class RegistrationController extends RegistrationView {
 
 				logger.info("user inserted: " + username + ", " + email + ", " + 
 							password + ", " + userImage + ", " + shukherCode);
+
+				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp;");
+				rs.last();
+				registerAccounts(rs.getInt("id"));
+
+				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET account=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
+				dbGate.insertData(statement);
 			} catch(Exception e) {
 				logger.error("Exception: ", e);
 			}
