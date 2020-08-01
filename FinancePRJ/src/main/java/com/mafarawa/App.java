@@ -14,7 +14,6 @@ import java.util.Map;
 public class App extends Application {
     private SelectUserController suc;
     private RegistrationController ruc;
-    private MainWindow mw;
     private static Map<SelectScene, Scene> scenes;
 
     public static void main(String[] args) {
@@ -24,12 +23,10 @@ public class App extends Application {
     public void start(Stage stage) {
         suc = new SelectUserController(stage);
         ruc = new RegistrationController(stage);
-        mw = new MainWindow(stage);
 
         scenes = new HashMap<>();
         scenes.put(SelectScene.SELECT_USER_SCENE, suc.getScene());
         scenes.put(SelectScene.REGISTRATION_SCENE, ruc.getScene());
-        scenes.put(SelectScene.MAIN_WINDOW, mw.getScene());
 
         stage.setScene(scenes.get(SelectScene.SELECT_USER_SCENE));
         stage.setTitle("FinancePRJ");
