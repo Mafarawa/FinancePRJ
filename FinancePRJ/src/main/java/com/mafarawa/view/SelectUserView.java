@@ -30,7 +30,5 @@ public class SelectUserView {
 		scene = new Scene(rootLayout, 1000, 600);
 	}
 
-	public Scene getScene() {
-		return this.scene;
-	}
+	public Scene getScene() { return this.scene; }
 }
