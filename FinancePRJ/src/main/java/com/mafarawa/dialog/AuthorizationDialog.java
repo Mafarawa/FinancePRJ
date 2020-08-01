@@ -3,6 +3,7 @@ package com.mafarawa.dialog;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.model.SelectScene;
+import com.mafarawa.main.MainWindow;
 import com.mafarawa.App;
 
 import javafx.geometry.Orientation;
@@ -82,7 +83,8 @@ public class AuthorizationDialog {
             ResultSet rs = dbGate.executeData("SELECT userfp.password FROM userfp WHERE userfp.name='" + username + "';");
             while (rs.next()) {
                 if(passwordInputValue.equals(rs.getString(1))) {
-                    stage.setScene(App.selectScene(SelectScene.MAIN_WINDOW));
+                    MainWindow mw = new MainWindow(stage, username);
+                    stage.setScene(mw.getScene());
                     childStage.close();
                     logger.info("CORRECT PASSWORD");
                 } else {
