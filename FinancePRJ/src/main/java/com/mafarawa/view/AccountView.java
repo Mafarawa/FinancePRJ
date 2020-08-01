@@ -11,18 +11,18 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 
 public class AccountView {
-	private Label accountName;
-	private Label accountNameValue;
-	private Label accountType;
-	private Label accountTypeValue;
-	private Label accountBalance;
-	private Label accountBalanceValue;
-	private ListView<String> accountList;
-	private SplitPane splitPane;
-	private Button addAccount;
-	private Button removeAccount;
-	private Button editAccount;
-	private Scene scene;
+	protected Label accountName;
+	protected Label accountNameValue;
+	protected Label accountType;
+	protected Label accountTypeValue;
+	protected Label accountBalance;
+	protected Label accountBalanceValue;
+	protected ListView<String> accountList;
+	protected SplitPane splitPane;
+	protected Button addAccount;
+	protected Button removeAccount;
+	protected Button editAccount;
+	protected Scene scene;
 
 	public AccountView() {
 		accountName = new Label("Название счета:");
