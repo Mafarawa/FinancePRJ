@@ -5,18 +5,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 
+import com.mafarawa.controller.AccountController;
+
 public class MainWindow {
-	private Stage stage;
-	private Scene scene;
-	private TabPane tabPane;
-	private Tab accountTab;
-	private Tab sada;
-	private Tab gasf;
+	protected Stage stage;
+	protected Scene scene;
+	protected TabPane tabPane;
+	protected Tab accountTab;
+	protected Tab sada;
+	protected Tab gasf;
+	protected static String name;
 
-	public MainWindow(Stage stage) {
+	public MainWindow(Stage stage, String name) {
 		this.stage = stage;
+		this.name = name;
 
-		accountTab = new Tab("Счета");
+		accountTab = new Tab("Счета", new AccountController(name).getLayout());
 		sada = new Tab("Расходы");
 		gasf = new Tab("Операции");
 
@@ -26,7 +30,7 @@ public class MainWindow {
 		tabPane.getTabs().add(sada);
 		tabPane.getTabs().add(gasf);
 
-		scene = new Scene(tabPane, 1000, 600);
+		scene = new Scene(tabPane, 1000, 600);		
 	}
 
 	public Stage getStage() { return this.stage; }
