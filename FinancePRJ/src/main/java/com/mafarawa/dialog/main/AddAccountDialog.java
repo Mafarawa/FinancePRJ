@@ -1,6 +1,7 @@
 package com.mafarawa.dialog.main;
 
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
@@ -11,8 +12,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.geometry.Pos;
+import java.sql.*;
+import org.apache.log4j.Logger;
 
 import com.mafarawa.model.AccountType;
+import com.mafarawa.connect.DBGate;
 
 public class AddAccountDialog {
 	private Label accountNameLabel;
@@ -26,7 +30,10 @@ public class AddAccountDialog {
 	private Stage childStage;
 	private Scene scene;
 
-	public AddAccountDialog(Stage stage) {
+    private static Logger logger;
+    static { logger = Logger.getLogger(AddAccountDialog.class.getName()); }
+
+	public AddAccountDialog(Stage stage, String name) {
 		accountNameLabel = new Label("Название счета:");
 		accountTypeLabel = new Label("Тип счета:");
 		accountBalanceLabel = new Label("Баланс на счету:");
@@ -63,12 +70,42 @@ public class AddAccountDialog {
 
 		scene = new Scene(rootLayout, 350, 250);
 
-		this.childStage = new Stage();
-        this.childStage.initOwner(stage);
-        this.childStage.initModality(Modality.WINDOW_MODAL);
-        this.childStage.setTitle("Добавить счет");
-        this.childStage.setResizable(false);
-        this.childStage.setScene(scene);
+		childStage = new Stage();
+        childStage.initOwner(stage);
+        childStage.initModality(Modality.WINDOW_MODAL);
+        childStage.setTitle("Добавить счет");
+        childStage.setResizable(false);
+        childStage.setScene(scene);
+
+        cancelButton.setOnAction(e -> {
+        	accountNameInput.clear();
+        	accountBalanceInput.clear();
+        	childStage.close();
+        });
+
+        doneButton.setOnAction(e -> {
+        	addNewAccount(name);
+        	childStage.fireEvent(new WindowEvent(childStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        });
+	}
+
+	private void addNewAccount(String name) {
+		int userfp_id = 0;
+		String accountName = accountNameInput.getText();
+		String accountType = accountTypeBox.getValue();
+		String accountBalance = accountBalanceInput.getText();
+		DBGate dbGate = DBGate.getInstance();
+
+		try {
+			ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
+			rs.next();
+			userfp_id = rs.getInt("id");
+
+			dbGate.insertData("INSERT INTO account(account_id, name, type, balance) VALUES(" + 
+				userfp_id + ", '" + accountName + "', '" + accountType + "', " + accountBalance + ");");
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
 	}
 
 	public Scene getScene() { return this.scene; }
