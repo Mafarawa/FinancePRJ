@@ -22,9 +22,12 @@ public class AccountController extends AccountView {
 		super();
 
 		getUserAccountsList(name);
+		
+		AddAccountDialog addAccountDialog = new AddAccountDialog(stage, name);
+		addAccountDialog.getStage().setOnCloseRequest(e -> getUserAccountsList(name));
 
 		super.accountList.setOnMouseClicked(e -> getSelectedAccount(super.accountList.getSelectionModel().getSelectedItem()));
-		super.addAccount.setOnAction(e -> new AddAccountDialog(stage).getStage().show());
+		super.addAccount.setOnAction(e -> addAccountDialog.getStage().show());
 	}
 
 	private void getSelectedAccount(String accountName) {
@@ -43,6 +46,8 @@ public class AccountController extends AccountView {
 	}
 
 	private void getUserAccountsList(String name) {
+		super.accountList.getItems().clear();
+		
 		DBGate dbGate = DBGate.getInstance();
 
 		try {
