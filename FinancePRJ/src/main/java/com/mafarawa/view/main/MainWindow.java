@@ -20,7 +20,7 @@ public class MainWindow {
 		this.stage = stage;
 		this.name = name;
 
-		accountTab = new Tab("Счета", new AccountController(name).getLayout());
+		accountTab = new Tab("Счета", new AccountController(stage, name).getLayout());
 		sada = new Tab("Расходы");
 		gasf = new Tab("Операции");
 
