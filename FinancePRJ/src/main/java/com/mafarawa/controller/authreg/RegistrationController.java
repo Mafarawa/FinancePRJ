@@ -1,12 +1,12 @@
-package com.mafarawa.controller;
+package com.mafarawa.controller.authreg;
 
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.model.AccountType;
-import com.mafarawa.view.RegistrationView;
-import com.mafarawa.dialog.SelectImageDialog;
+import com.mafarawa.view.authreg.RegistrationView;
+import com.mafarawa.dialog.authreg.SelectImageDialog;
 
 import javafx.stage.Stage;
 import java.sql.PreparedStatement;

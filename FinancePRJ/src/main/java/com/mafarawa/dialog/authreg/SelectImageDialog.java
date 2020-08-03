@@ -1,4 +1,4 @@
-package com.mafarawa.dialog;
+package com.mafarawa.dialog.authreg;
 
 import com.mafarawa.model.UserImage;
 

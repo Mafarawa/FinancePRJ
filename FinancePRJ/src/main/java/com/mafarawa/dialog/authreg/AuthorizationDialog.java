@@ -1,9 +1,9 @@
-package com.mafarawa.dialog;
+package com.mafarawa.dialog.authreg;
 
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.model.SelectScene;
-import com.mafarawa.main.MainWindow;
+import com.mafarawa.view.main.MainWindow;
 import com.mafarawa.App;
 
 import javafx.geometry.Orientation;

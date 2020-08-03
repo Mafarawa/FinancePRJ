@@ -1,6 +1,6 @@
-package com.mafarawa.controller;
+package com.mafarawa.controller.main;
 
-import com.mafarawa.view.AccountView;
+import com.mafarawa.view.main.AccountView;
 import com.mafarawa.model.AccountModel;
 import com.mafarawa.connect.DBGate;
 

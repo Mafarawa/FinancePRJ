@@ -1,11 +1,11 @@
-package com.mafarawa.controller;
+package com.mafarawa.controller.authreg;
 
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
-import com.mafarawa.dialog.AuthorizationDialog;
+import com.mafarawa.dialog.authreg.AuthorizationDialog;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
-import com.mafarawa.view.SelectUserView;
+import com.mafarawa.view.authreg.SelectUserView;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;

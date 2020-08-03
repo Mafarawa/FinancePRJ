@@ -1,4 +1,4 @@
-package com.mafarawa.view;
+package com.mafarawa.view.authreg;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
