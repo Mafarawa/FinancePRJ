@@ -3,7 +3,9 @@ package com.mafarawa.controller.main;
 import com.mafarawa.view.main.AccountView;
 import com.mafarawa.model.AccountModel;
 import com.mafarawa.connect.DBGate;
+import com.mafarawa.dialog.main.AddAccountDialog;
 
+import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import java.util.ArrayList;
@@ -16,12 +18,13 @@ public class AccountController extends AccountView {
 	private static Logger logger;
 	static { logger = Logger.getLogger(AccountController.class.getName()); }
 
-	public AccountController(String name) {
+	public AccountController(Stage stage, String name) {
 		super();
 
 		getUserAccountsList(name);
 
 		super.accountList.setOnMouseClicked(e -> getSelectedAccount(super.accountList.getSelectionModel().getSelectedItem()));
+		super.addAccount.setOnAction(e -> new AddAccountDialog(stage).getStage().show());
 	}
 
 	private void getSelectedAccount(String accountName) {
