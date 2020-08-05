@@ -22,6 +22,7 @@ public class AddAccountDialog {
 	private Label accountNameLabel;
 	private Label accountTypeLabel;
 	private Label accountBalanceLabel;
+	private Label checkLabel;
 	private TextField accountNameInput;
 	private TextField accountBalanceInput;
 	private ComboBox<String> accountTypeBox;
@@ -37,6 +38,10 @@ public class AddAccountDialog {
 		accountNameLabel = new Label("Название счета:");
 		accountTypeLabel = new Label("Тип счета:");
 		accountBalanceLabel = new Label("Баланс на счету:");
+
+		checkLabel = new Label();
+		checkLabel.setAlignment(Pos.CENTER);
+
 		accountNameInput = new TextField();
 		accountBalanceInput = new TextField();
 
@@ -66,7 +71,7 @@ public class AddAccountDialog {
 
 		VBox rootLayout = new VBox(20);
 		rootLayout.setAlignment(Pos.CENTER);
-		rootLayout.getChildren().addAll(inputLayout, buttonLayout);
+		rootLayout.getChildren().addAll(inputLayout, checkLabel, buttonLayout);
 
 		scene = new Scene(rootLayout, 350, 250);
 
@@ -83,10 +88,7 @@ public class AddAccountDialog {
         	childStage.close();
         });
 
-        doneButton.setOnAction(e -> {
-        	addNewAccount(name);
-        	childStage.fireEvent(new WindowEvent(childStage, WindowEvent.WINDOW_CLOSE_REQUEST));
-        });
+        doneButton.setOnAction(e -> addNewAccount(name));
 	}
 
 	private void addNewAccount(String name) {
@@ -96,15 +98,25 @@ public class AddAccountDialog {
 		String accountBalance = accountBalanceInput.getText();
 		DBGate dbGate = DBGate.getInstance();
 
-		try {
-			ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
-			rs.next();
-			userfp_id = rs.getInt("id");
+		if(accountName.isEmpty() || accountBalance.isEmpty()) {
+			checkLabel.setText("Заполните все поля!");
+		} else {		
+			try {
+				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
+				rs.next();
+				userfp_id = rs.getInt("id");
 
-			dbGate.insertData("INSERT INTO account(account_id, name, type, balance) VALUES(" + 
-				userfp_id + ", '" + accountName + "', '" + accountType + "', " + accountBalance + ");");
-		} catch(Exception e) {
-			logger.error("Exception: ", e);
+				dbGate.insertData("INSERT INTO account(account_id, name, type, balance) VALUES(" + 
+					userfp_id + ", '" + accountName + "', '" + accountType + "', " + accountBalance + ");");
+
+				accountNameInput.clear();
+				accountBalanceInput.clear();
+	        	childStage.fireEvent(new WindowEvent(childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+			} catch(SQLException e) {
+				checkLabel.setText("Счет с именем '" + accountName + "' уже существует");
+				logger.error("Exception: ", e);
+			}
+
 		}
 	}
 
