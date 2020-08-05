@@ -38,7 +38,7 @@ public class RemoveAccountDialog {
 		rootLayout.setAlignment(Pos.CENTER);
 		rootLayout.getChildren().addAll(questionLabel, buttonLayout);
 
-		scene = new Scene(rootLayout, 350, 150);
+		scene = new Scene(rootLayout, 450, 100);
 
 		childStage = new Stage();
         childStage.initOwner(stage);
