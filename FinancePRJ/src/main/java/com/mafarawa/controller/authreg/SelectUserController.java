@@ -50,7 +50,7 @@ public class SelectUserController extends SelectUserView {
 		DBGate dbgate = DBGate.getInstance();
 
 		try {
-			ResultSet rs = dbgate.executeData("SELECT userfp.name, userfp.email, userfp.password, userfp.image FROM userfp;");
+			ResultSet rs = dbgate.executeData("SELECT userfp.name, userfp.email, userfp.password, user_image.image_path FROM userfp JOIN user_image ON user_image.id = userfp.image;");
 			while(rs.next()) {
 				String name = rs.getString(1);
 				String email = rs.getString(2);
