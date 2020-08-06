@@ -27,7 +27,6 @@ public class AccountController extends AccountView {
 		AddAccountDialog addAccountDialog = new AddAccountDialog(stage, name);
 		addAccountDialog.getStage().setOnCloseRequest(e -> getUserAccountsList(name));
 	
-		//Make that shit better
 		super.accountList.setOnMouseClicked(e -> {
 			getSelectedAccount(super.accountList.getSelectionModel().getSelectedItem());
 			RemoveAccountDialog removeAccountDialog = new RemoveAccountDialog(stage, super.accountList.getSelectionModel().getSelectedItem());
@@ -42,7 +41,7 @@ public class AccountController extends AccountView {
 		DBGate dbGate = DBGate.getInstance();
 
 		try {
-			ResultSet rs = dbGate.executeData("SELECT account.type, account.balance FROM account WHERE account.name=" + "'" + accountName + "';");
+			ResultSet rs = dbGate.executeData("SELECT account_type.type, account.balance FROM account JOIN account_type ON account_type.id=account.type_id;");
 			while(rs.next()) {
 				super.accountNameValue.setText(accountName);
 				super.accountTypeValue.setText(rs.getString(1));
@@ -59,9 +58,9 @@ public class AccountController extends AccountView {
 		DBGate dbGate = DBGate.getInstance();
 
 		try {
-			ResultSet rs = dbGate.executeData("SELECT userfp.account FROM userfp WHERE userfp.name=" + "'" + name + "';");
+			ResultSet rs = dbGate.executeData("SELECT userfp.accounts FROM userfp WHERE userfp.name=" + "'" + name + "';");
 			rs.next();
-			this.account_id = rs.getInt("account");
+			this.account_id = rs.getInt("accounts");
 
 			rs = dbGate.executeData("SELECT account.name FROM account JOIN userfp ON userfp.id=" + account_id + ";");
 			while(rs.next()) {
