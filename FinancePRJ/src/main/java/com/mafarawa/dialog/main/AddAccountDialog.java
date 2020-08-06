@@ -106,8 +106,8 @@ public class AddAccountDialog {
 				rs.next();
 				userfp_id = rs.getInt("id");
 
-				dbGate.insertData("INSERT INTO account(account_id, name, type, balance) VALUES(" + 
-					userfp_id + ", '" + accountName + "', '" + accountType + "', " + accountBalance + ");");
+				dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + 
+					userfp_id + ", '" + accountName + "', " + AccountType.getIdByType(accountType) + ", " + accountBalance + ");");
 
 				accountNameInput.clear();
 				accountBalanceInput.clear();
