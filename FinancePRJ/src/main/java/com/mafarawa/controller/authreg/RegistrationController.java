@@ -4,9 +4,11 @@ import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
+import com.mafarawa.model.UserImage;
 import com.mafarawa.model.AccountType;
 import com.mafarawa.view.authreg.RegistrationView;
 import com.mafarawa.dialog.authreg.SelectImageDialog;
+import com.mafarawa.view.main.MainWindow;
 
 import javafx.stage.Stage;
 import java.sql.PreparedStatement;
@@ -24,7 +26,7 @@ public class RegistrationController extends RegistrationView {
 		sic = new SelectImageDialog(stage, super.selectImageButton);
 
 		super.selectImageButton.setOnAction(e -> sic.getStage().show());
-		super.doneButton.setOnAction(e -> registerUser());
+		super.doneButton.setOnAction(e -> registerUser(stage));
 		super.cancelButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.SELECT_USER_SCENE)));
 	}
 
@@ -34,18 +36,18 @@ public class RegistrationController extends RegistrationView {
 		DBGate dbGate = DBGate.getInstance();
 
 		try {
-			dbGate.insertData("INSERT INTO account (account_id, name, type, balance) VALUES (" + user_id + ", 'Карта', " + "'" + AccountType.CARD_ACCOUNT.getAccountType() + "'" + ", 0);");
-			dbGate.insertData("INSERT INTO account (account_id, name, type, balance) VALUES (" + user_id + ", 'Наличные', " + "'" + AccountType.CURRENT_ACCOUNT.getAccountType() + "'" + ", 0);");
+			dbGate.insertData("INSERT INTO account (account_id, name, type_id, balance) VALUES (" + user_id + ", 'Карта', " + AccountType.getIdByType("Карточный") + ", 0);");
+			dbGate.insertData("INSERT INTO account (account_id, name, type_id, balance) VALUES (" + user_id + ", 'Наличные', " + AccountType.getIdByType("Текущий") + ", 0);");
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
 		}
 	}
 
-	private void registerUser() {
+	private void registerUser(Stage stage) {
 		String username = super.usernameInput.getText();
 		String email = super.emailInput.getText();
 		String password = Integer.toHexString(super.passwordInput.getText().hashCode());
-		String userImage = sic.getUserImageValue();
+		int userImage = sic.getUserImageValue();
 		long shukherCode = UserModel.createShukherCode(username, email, password);
 
 		if(username.isEmpty() || email.isEmpty() || password.isEmpty()) {
@@ -59,24 +61,25 @@ public class RegistrationController extends RegistrationView {
 				statement.setString(1, username);
 				statement.setString(2, email);
 				statement.setString(3, password);
-				statement.setString(4, userImage);
+				statement.setInt(4, userImage);
 				statement.setLong(5, shukherCode);
 				dbGate.insertData(statement);
 
 				logger.info("user inserted: " + username + ", " + email + ", " + 
-							password + ", " + userImage + ", " + shukherCode);
+							password + ", " + UserImage.getImageById(userImage) + ", " + shukherCode);
 
 				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp;");
 				rs.last();
 				registerAccounts(rs.getInt("id"));
 
-				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET account=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
+				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET accounts=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
 				dbGate.insertData(statement);
+
+				MainWindow mw = new MainWindow(stage, username);
+				stage.setScene(mw.getScene());
 			} catch(Exception e) {
 				logger.error("Exception: ", e);
 			}
-
-			super.checkLabel.setText("Проверте свою Эл. почту");
 		}
 	}
 }
