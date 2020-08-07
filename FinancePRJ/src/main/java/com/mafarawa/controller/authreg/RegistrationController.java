@@ -7,7 +7,7 @@ import com.mafarawa.model.UserModel;
 import com.mafarawa.model.UserImage;
 import com.mafarawa.model.AccountType;
 import com.mafarawa.view.authreg.RegistrationView;
-import com.mafarawa.dialog.authreg.SelectImageDialog;
+import com.mafarawa.controller.authreg.SelectImageController;
 import com.mafarawa.view.main.MainWindow;
 
 import javafx.stage.Stage;
@@ -16,14 +16,14 @@ import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 public class RegistrationController extends RegistrationView {
-	private SelectImageDialog sic;
+	private SelectImageController sic;
 	
 	private static Logger logger;
 	static { logger = Logger.getLogger(RegistrationController.class.getName()); }
 
 	public RegistrationController(Stage stage) {
 		super();
-		sic = new SelectImageDialog(stage, super.selectImageButton);
+		sic = new SelectImageController(stage, super.selectImageButton);
 
 		super.selectImageButton.setOnAction(e -> sic.getStage().show());
 		super.doneButton.setOnAction(e -> registerUser(stage));
@@ -70,10 +70,11 @@ public class RegistrationController extends RegistrationView {
 
 				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp;");
 				rs.last();
-				registerAccounts(rs.getInt("id"));
 
 				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET accounts=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
 				dbGate.insertData(statement);
+				
+				registerAccounts(rs.getInt("id"));
 
 				MainWindow mw = new MainWindow(stage, username);
 				stage.setScene(mw.getScene());
