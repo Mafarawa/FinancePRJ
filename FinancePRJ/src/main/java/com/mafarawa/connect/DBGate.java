@@ -44,7 +44,7 @@ public class DBGate {
 			getDatabase();
 		}
 
-		Statement statement = database.createStatement();
+		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		ResultSet rs = statement.executeQuery(query);
 		logger.debug("ResultSet executed this query: " + query);
 
@@ -58,5 +58,15 @@ public class DBGate {
 
 		ps.executeUpdate();
 		logger.info("PreparedStatement executed");
+	}
+
+	public void insertData(String st) throws SQLException {
+		if(database == null) {
+			getDatabase();
+		}
+
+		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		statement.execute(st);
+		logger.info("Statement executed");
 	}
 }

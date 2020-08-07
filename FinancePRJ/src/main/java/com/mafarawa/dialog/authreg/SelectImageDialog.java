@@ -1,4 +1,4 @@
-package com.mafarawa.dialog;
+package com.mafarawa.dialog.authreg;
 
 import com.mafarawa.model.UserImage;
 
@@ -20,31 +20,31 @@ public class SelectImageDialog {
     private Button whiteUserButton;
     private Button yellowUserButton;
     private Scene scene;
-    private String userImageValue;
+    private int userImageValue;
 
     public SelectImageDialog(Stage stage, Button button) {
         blackUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.BLACK_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(1)), 100, 100, false, false)
         ));
 
         blueUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.BLUE_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(2)), 100, 100, false, false)
         ));
 
         greenUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.GREEN_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(3)), 100, 100, false, false)
         ));
 
         redUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.RED_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(4)), 100, 100, false, false)
         ));
 
         whiteUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.WHITE_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(5)), 100, 100, false, false)
         ));
         
         yellowUserButton = new Button("", new ImageView(
-                new Image(getClass().getResourceAsStream(UserImage.YELLOW_USER.getImage()), 100, 100, false, false)
+                new Image(getClass().getResourceAsStream(UserImage.getImageById(6)), 100, 100, false, false)
         ));
 
         GridPane selectImageLayout = new GridPane();
@@ -67,55 +67,56 @@ public class SelectImageDialog {
         this.childStage.setResizable(false);
         this.childStage.setScene(scene);
 
-        userImageValue = UserImage.WHITE_USER.getImage();
+        userImageValue = 1;
 
         blackUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.BLACK_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(1));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(1)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
 
         blueUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.BLUE_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(2));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(2)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
 
         greenUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.GREEN_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(3));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(3)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
 
         redUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.RED_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(4));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(4)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
 
         whiteUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.WHITE_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(5));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(5)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
 
         yellowUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.YELLOW_USER.getImage());
-            Image image = new Image(getClass().getResourceAsStream(userImageValue), 100, 100, false, false);
+            setUserImageValue(UserImage.getImageById(6));
+            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(6)), 100, 100, false, false);
             button.setGraphic(new ImageView(image));
             childStage.close();
         });
     }
 
-    private void setUserImageValue(String userImageValue) { this.userImageValue = userImageValue; }
+    private void setUserImageValue(String selectedImage) {
+        userImageValue = UserImage.getIdByImage(selectedImage);
+    }
 
-    public String getUserImageValue() { return this.userImageValue; }
+    public int getUserImageValue() { return this.userImageValue; }
     public Scene getScene() { return this.scene; }
     public Stage getStage() { return this.childStage; }
-
 }

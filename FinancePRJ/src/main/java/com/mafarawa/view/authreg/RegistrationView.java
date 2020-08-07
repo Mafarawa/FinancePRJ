@@ -1,4 +1,4 @@
-package com.mafarawa.view;
+package com.mafarawa.view.authreg;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -63,7 +63,5 @@ public class RegistrationView {
         scene = new Scene(rootLayout, 1000, 600);
     }
 
-    public Scene getScene() {
-        return this.scene;
-    }
+    public Scene getScene() { return this.scene; }
 }

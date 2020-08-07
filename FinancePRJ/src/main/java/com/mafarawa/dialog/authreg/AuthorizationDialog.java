@@ -1,13 +1,17 @@
-package com.mafarawa.dialog;
+package com.mafarawa.dialog.authreg;
 
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
+import com.mafarawa.model.SelectScene;
+import com.mafarawa.view.main.MainWindow;
+import com.mafarawa.App;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,8 +20,8 @@ import javafx.stage.Stage;
 import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
-
-public class AutorizationDialog {
+public class AuthorizationDialog {
+    private Label errorLabel;
     private Button userAvatar;
     private Button doneButton;
     private Button dropPasswordButton;
@@ -27,9 +31,11 @@ public class AutorizationDialog {
     private Scene scene;
     
     private static Logger logger;
-    static { logger = Logger.getLogger(AutorizationDialog.class.getName()); }
+    static { logger = Logger.getLogger(AuthorizationDialog.class.getName()); }
 
-    public AutorizationDialog(Stage stage, UserModel user) {
+    public AuthorizationDialog(Stage stage, UserModel user) {
+        errorLabel = new Label();
+
         doneButton = new Button("Войти");
         dropPasswordButton = new Button("Забыл пароль");
 
@@ -41,7 +47,7 @@ public class AutorizationDialog {
 
         inputLayout = new VBox(20);
         inputLayout.setAlignment(Pos.CENTER);
-        inputLayout.getChildren().addAll(passwordInput, buttonLayout);
+        inputLayout.getChildren().addAll(passwordInput, errorLabel, buttonLayout);
 
         FlowPane rootLayout = new FlowPane(Orientation.VERTICAL, 20, 10);
         rootLayout.setAlignment(Pos.CENTER);
@@ -57,7 +63,7 @@ public class AutorizationDialog {
         childStage.setScene(scene);
 
         setUserAvatar(user.cloneUserAvatar());
-        doneButton.setOnAction(e -> autorizeUser(user.getName()));
+        doneButton.setOnAction(e -> authorizeUser(user.getName(), stage));
         dropPasswordButton.setOnAction(e -> new DropPasswordDialog(childStage, user));
     }
 
@@ -67,18 +73,22 @@ public class AutorizationDialog {
         inputLayout.getChildren().add(0, userAvatar);
     }
 
-    private void autorizeUser(String username) {
+    private void authorizeUser(String username, Stage stage) {
         DBGate dbGate = DBGate.getInstance();
         String passwordInputValue = Integer.toHexString(passwordInput.getText().hashCode());
 
-        logger.debug("User: " + username + " try to autorize with password: " + passwordInputValue);
+        logger.debug("User: " + username + " try to authorize with password: " + passwordInputValue);
 
         try {
             ResultSet rs = dbGate.executeData("SELECT userfp.password FROM userfp WHERE userfp.name='" + username + "';");
             while (rs.next()) {
                 if(passwordInputValue.equals(rs.getString(1))) {
+                    MainWindow mw = new MainWindow(stage, username);
+                    stage.setScene(mw.getScene());
+                    childStage.close();
                     logger.info("CORRECT PASSWORD");
                 } else {
+                    errorLabel.setText("Не правильный пароль!");
                     logger.info("WRONG PASSWORD");
                 }
             }

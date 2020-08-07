@@ -1,4 +1,4 @@
-package com.mafarawa.dialog;
+package com.mafarawa.dialog.authreg;
 
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
@@ -164,6 +164,8 @@ public class DropPasswordDialog {
             }
 
             logger.info("Password changed");
+
+            this.stage.close();
         }
     }
 

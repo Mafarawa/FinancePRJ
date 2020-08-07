@@ -1,16 +1,37 @@
 package com.mafarawa.model;
 
 public enum UserImage {
-    BLACK_USER("/images/user/blackuser.png"),
-    BLUE_USER("/images/user/blueuser.png"),
-    GREEN_USER("/images/user/greenuser.png"),
-    RED_USER("/images/user/reduser.png"),
-    WHITE_USER("/images/user/whiteuser.png"),
-    YELLOW_USER("/images/user/yellowuser.png");
+    BLACK_USER(1, "/images/user/blackuser.png"),
+    BLUE_USER(2, "/images/user/blueuser.png"),
+    GREEN_USER(3, "/images/user/greenuser.png"),
+    RED_USER(4, "/images/user/reduser.png"),
+    WHITE_USER(5, "/images/user/whiteuser.png"),
+    YELLOW_USER(6, "/images/user/yellowuser.png");
 
-    private String image;
+    private int userImageId;
+    private String userImage;
 
-    UserImage(String image) { this.image = image; }
+    UserImage(int userImageId, String userImage) {
+    	this.userImageId = userImageId;
+    	this.userImage = userImage;
+    }
 
-    public String getImage() { return image; }
+    public static int getIdByImage(String image) {
+    	for(UserImage temp : values()) {
+    		if(temp.userImage == image) return temp.getId();
+    	}
+
+        return 0;
+    }
+
+    public static String getImageById(int id) {
+    	for(UserImage temp : values()) {
+    		if(temp.userImageId == id) return temp.getImage();
+    	}
+
+        return "";
+    }
+
+    public int getId() { return userImageId; }
+    public String getImage() { return userImage; }
 }
