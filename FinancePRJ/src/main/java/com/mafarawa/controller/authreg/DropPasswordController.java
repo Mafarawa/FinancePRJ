@@ -1,7 +1,8 @@
-package com.mafarawa.dialog.authreg;
+package com.mafarawa.controller.authreg;
 
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
+import com.mafarawa.view.authreg.DropPasswordView;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,67 +27,26 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
-public class DropPasswordDialog {
+public class DropPasswordController extends DropPasswordView {
     private boolean permission;
-    private int valueInput;
-    private Label label;
-    private TextField shukherCodeInput;
-    private PasswordField passwordInput;
-    private PasswordField confirmPasswordInput;
-    private Button doneButton;
-    private Scene scene;
-    private Stage stage;
-    
+    private int valueInput;	
     private static Logger logger;
-    static { logger = Logger.getLogger(DropPasswordDialog.class.getName()); }
+    static { logger = Logger.getLogger(DropPasswordController.class.getName()); }
 
-    public DropPasswordDialog(Stage stage, UserModel user) {
-        sendEmail(user.getName());
+	public DropPasswordController(Stage stage, UserModel user) {
+		super(stage);
 
-        label = new Label("На вашу Эл. почту пришел код сброса");
-        shukherCodeInput = new TextField();
-        shukherCodeInput.setPromptText("Введите код сброса");
-
-        passwordInput = new PasswordField();
-        passwordInput.setPromptText("Введите пароль");
-        passwordInput.setDisable(true);
-
-        confirmPasswordInput = new PasswordField();
-        confirmPasswordInput.setPromptText("Потвердите пароль");
-        confirmPasswordInput.setDisable(true);
-
-        doneButton = new Button("Сбросить пароль");
-
-        VBox inputLayout = new VBox(10);
-        inputLayout.setAlignment(Pos.CENTER);
-        inputLayout.getChildren().addAll(label, shukherCodeInput, passwordInput, confirmPasswordInput, doneButton);
-
-        FlowPane rootLayout = new FlowPane(Orientation.VERTICAL, 20, 10);
-        rootLayout.setAlignment(Pos.CENTER);
-        rootLayout.getChildren().add(inputLayout);
-
-        scene = new Scene(rootLayout, 300, 300);
-
-        this.stage = new Stage();
-        this.stage.initOwner(stage);
-        this.stage.initModality(Modality.WINDOW_MODAL);
-        this.stage.setResizable(false);
-        this.stage.setScene(scene);
-        this.stage.setTitle("Сброс пароля");
-        this.stage.show();
-
-
-        shukherCodeInput.setOnKeyReleased(e -> {
+        super.shukherCodeInput.setOnKeyReleased(e -> {
             valueInput = 0;
-            valueInput = Integer.parseInt(shukherCodeInput.getText());
+            valueInput = Integer.parseInt(super.shukherCodeInput.getText());
             permission = checkShukherCode(valueInput, user.getName());
         });
 
-        doneButton.setOnAction(e -> {
+        super.doneButton.setOnAction(e -> {
             boolean permission = this.permission;
             if(permission) dropPassword(valueInput, user);
-        });
-    }
+        });		
+	}
 
     public void sendEmail(String name) {
         DBGate dbGate = DBGate.getInstance();
@@ -143,8 +103,8 @@ public class DropPasswordDialog {
     }
 
     private void dropPassword(int valueInput, UserModel user) {
-        String password1 = Integer.toHexString(passwordInput.getText().hashCode());
-        String password2 = Integer.toHexString(confirmPasswordInput.getText().hashCode());
+        String password1 = Integer.toHexString(super.passwordInput.getText().hashCode());
+        String password2 = Integer.toHexString(super.confirmPasswordInput.getText().hashCode());
 
         if(password1.equals(password2)) {
             logger.warn("Password will be changed to: " + password1);
@@ -165,7 +125,7 @@ public class DropPasswordDialog {
 
             logger.info("Password changed");
 
-            this.stage.close();
+            super.childStage.close();
         }
     }
 
@@ -176,9 +136,9 @@ public class DropPasswordDialog {
             ResultSet rs = dbGate.executeData("SELECT userfp.name FROM userfp WHERE shukher_code=" + value + ";");
             while(rs.next()) {
                 if(rs.getString(1).equals(name)) {
-                    shukherCodeInput.setDisable(true);
-                    passwordInput.setDisable(false);
-                    confirmPasswordInput.setDisable(false);
+                    super.shukherCodeInput.setDisable(true);
+                    super.passwordInput.setDisable(false);
+                    super.confirmPasswordInput.setDisable(false);
 
                     logger.debug("CORRECT CODE");
 
@@ -190,8 +150,5 @@ public class DropPasswordDialog {
         }
 
         return false;
-    }
-
-    public Scene getScene() { return this.scene; }
-    public Stage getStage() { return this.stage; }
+    }	
 }

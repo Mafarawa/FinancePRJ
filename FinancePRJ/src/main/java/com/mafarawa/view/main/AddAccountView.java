@@ -1,4 +1,4 @@
-package com.mafarawa.dialog.main;
+package com.mafarawa.view.main;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -12,29 +12,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.geometry.Pos;
-import java.sql.*;
-import org.apache.log4j.Logger;
 
 import com.mafarawa.model.AccountType;
-import com.mafarawa.connect.DBGate;
 
-public class AddAccountDialog {
-	private Label accountNameLabel;
-	private Label accountTypeLabel;
-	private Label accountBalanceLabel;
-	private Label checkLabel;
-	private TextField accountNameInput;
-	private TextField accountBalanceInput;
-	private ComboBox<String> accountTypeBox;
-	private Button cancelButton;
-	private Button doneButton;
-	private Stage childStage;
-	private Scene scene;
+public class AddAccountView {
+	protected Label accountNameLabel;
+	protected Label accountTypeLabel;
+	protected Label accountBalanceLabel;
+	protected Label checkLabel;
+	protected TextField accountNameInput;
+	protected TextField accountBalanceInput;
+	protected ComboBox<String> accountTypeBox;
+	protected Button cancelButton;
+	protected Button doneButton;
+	protected Stage childStage;
+	protected Scene scene;
 
-    private static Logger logger;
-    static { logger = Logger.getLogger(AddAccountDialog.class.getName()); }
-
-	public AddAccountDialog(Stage stage, String name) {
+	public AddAccountView(Stage stage) {
 		accountNameLabel = new Label("Название счета:");
 		accountTypeLabel = new Label("Тип счета:");
 		accountBalanceLabel = new Label("Баланс на счету:");
@@ -81,43 +75,6 @@ public class AddAccountDialog {
         childStage.setTitle("Добавить счет");
         childStage.setResizable(false);
         childStage.setScene(scene);
-
-        cancelButton.setOnAction(e -> {
-        	accountNameInput.clear();
-        	accountBalanceInput.clear();
-        	childStage.close();
-        });
-
-        doneButton.setOnAction(e -> addNewAccount(name));
-	}
-
-	private void addNewAccount(String name) {
-		int userfp_id = 0;
-		String accountName = accountNameInput.getText();
-		String accountType = accountTypeBox.getValue();
-		String accountBalance = accountBalanceInput.getText();
-		DBGate dbGate = DBGate.getInstance();
-
-		if(accountName.isEmpty() || accountBalance.isEmpty()) {
-			checkLabel.setText("Заполните все поля!");
-		} else {		
-			try {
-				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
-				rs.next();
-				userfp_id = rs.getInt("id");
-
-				dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + 
-					userfp_id + ", '" + accountName + "', " + AccountType.getIdByType(accountType) + ", " + accountBalance + ");");
-
-				accountNameInput.clear();
-				accountBalanceInput.clear();
-	        	childStage.fireEvent(new WindowEvent(childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
-			} catch(SQLException e) {
-				checkLabel.setText("Счет с именем '" + accountName + "' уже существует");
-				logger.error("Exception: ", e);
-			}
-
-		}
 	}
 
 	public Scene getScene() { return this.scene; }

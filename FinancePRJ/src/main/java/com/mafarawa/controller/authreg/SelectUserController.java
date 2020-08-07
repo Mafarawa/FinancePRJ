@@ -2,7 +2,7 @@ package com.mafarawa.controller.authreg;
 
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
-import com.mafarawa.dialog.authreg.AuthorizationDialog;
+import com.mafarawa.controller.authreg.AuthorizationController;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.view.authreg.SelectUserView;
@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 
 public class SelectUserController extends SelectUserView {
 	private ArrayList<UserModel> users;
-	private ArrayList<AuthorizationDialog> authDialogs;
+	private ArrayList<AuthorizationController> authDialogs;
 	
 	private static Logger logger;
 	static { logger = Logger.getLogger(SelectUserController.class.getName()); }
@@ -28,7 +28,7 @@ public class SelectUserController extends SelectUserView {
 		getUsersToDisplay();
 
 		for(int i = 0; i < users.size(); i++) {
-			authDialogs.add(new AuthorizationDialog(stage, users.get(i)));
+			authDialogs.add(new AuthorizationController(stage, users.get(i)));
 		}
 
 		super.registrationButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.REGISTRATION_SCENE)));
