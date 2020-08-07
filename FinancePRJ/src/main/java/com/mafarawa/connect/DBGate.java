@@ -61,6 +61,8 @@ public class DBGate {
 	}
 
 	public void insertData(String st) throws SQLException {
+		logger.debug("Trying to execute: " + st);
+
 		if(database == null) {
 			getDatabase();
 		}
