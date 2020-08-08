@@ -5,6 +5,7 @@ import com.mafarawa.model.AccountModel;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.controller.main.AddAccountController;
 import com.mafarawa.controller.main.RemoveAccountController;
+import com.mafarawa.controller.main.EditAccountController;
 
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
@@ -29,9 +30,14 @@ public class AccountController extends AccountView {
 	
 		super.accountList.setOnMouseClicked(e -> {
 			getSelectedAccount(super.accountList.getSelectionModel().getSelectedItem());
+
 			RemoveAccountController rac = new RemoveAccountController(stage, super.accountList.getSelectionModel().getSelectedItem());
 			rac.getStage().setOnCloseRequest(r -> getUserAccountsList(name));
-			super.removeAccount.setOnAction(z -> rac.getStage().show());
+			super.removeAccount.setOnAction(r -> rac.getStage().show());
+
+			EditAccountController eac = new EditAccountController(stage, super.accountList.getSelectionModel().getSelectedItem());
+			eac.getStage().setOnCloseRequest(r -> getUserAccountsList(name));
+			super.editAccount.setOnAction(r -> eac.getStage().show());
 		});
 
 		super.addAccount.setOnAction(e -> aac.getStage().show());
