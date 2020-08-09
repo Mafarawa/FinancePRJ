@@ -68,7 +68,7 @@ public class AccountController extends AccountView {
 			rs.next();
 			this.account_id = rs.getInt("accounts");
 
-			rs = dbGate.executeData("SELECT account.name FROM account JOIN userfp ON userfp.id=" + account_id + ";");
+			rs = dbGate.executeData("SELECT account.name FROM account WHERE account.account_id=" + this.account_id + ";");
 			while(rs.next()) {
 				super.accountList.getItems().add(rs.getString("name"));
 			}
