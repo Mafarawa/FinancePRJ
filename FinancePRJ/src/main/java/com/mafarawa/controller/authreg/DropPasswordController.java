@@ -36,6 +36,8 @@ public class DropPasswordController extends DropPasswordView {
 	public DropPasswordController(Stage stage, UserModel user) {
 		super(stage);
 
+        sendEmail(user.getName());
+
         super.shukherCodeInput.setOnKeyReleased(e -> {
             valueInput = 0;
             valueInput = Integer.parseInt(super.shukherCodeInput.getText());
@@ -84,8 +86,7 @@ public class DropPasswordController extends DropPasswordView {
             }
         );
 
-        String msg = "Здравствуйте <b>" + name + "!</b> Вы проебали свой пароль. На ваше счастье Валерий aka " +
-                     "Пожиратель Чичварной Жижи сжалился над вами и разрешает сбросить пароль " +
+        String msg = "Здравствуйте <b>" + name + "!</b> Вы потеряли свой пароль. Вы можете сбросить пароль " +
                      "спомощью ниже приложеного кода: " + "\n" + "<hr>" + "\n" + "<h1>" + shukherCode + "</h1>";
 
         try {
