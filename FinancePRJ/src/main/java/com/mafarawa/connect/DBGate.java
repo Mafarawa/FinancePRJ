@@ -39,12 +39,24 @@ public class DBGate {
 		return database;
 	}
 
+	public void transaction(String query) throws SQLException {
+		logger.debug("Trying to transact: " + query);
+
+		if(database == null) {
+			getDatabase();
+		}
+
+		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		statement.execute(query);
+		logger.info("Transaction execute");		
+	}
+
 	public ResultSet executeData(String query) throws SQLException {
 		if(database == null) {
 			getDatabase();
 		}
 
-		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet rs = statement.executeQuery(query);
 		logger.debug("ResultSet executed this query: " + query);
 
@@ -67,7 +79,7 @@ public class DBGate {
 			getDatabase();
 		}
 
-		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		statement.execute(st);
 		logger.info("Statement executed");
 	}
