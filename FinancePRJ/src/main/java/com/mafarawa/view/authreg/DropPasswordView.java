@@ -52,7 +52,6 @@ public class DropPasswordView {
         childStage.setResizable(false);
         childStage.setScene(scene);
         childStage.setTitle("Сброс пароля");
-        childStage.show();
     }
 
     public Scene getScene() { return this.scene; }
