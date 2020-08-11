@@ -30,14 +30,34 @@ public class RegistrationController extends RegistrationView {
 		super.cancelButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.SELECT_USER_SCENE)));
 	}
 
+	private void registerCategories(int user_id) {
+		logger.debug("User id = " + user_id);
+
+		DBGate dbGate = DBGate.getInstance();
+
+		try {
+			dbGate.insertData("INSERT INTO income(income_id, category) VALUES(" + user_id + ", 'Зарплата');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Продукты');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Здоровье');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Продукты');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Кафе');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Досуг');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Транспорт');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Подарки');");
+			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Покупки');");
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
+	}
+
 	private void registerAccounts(int user_id) {
 		logger.debug("User id = " + user_id);
 
 		DBGate dbGate = DBGate.getInstance();
 
 		try {
-			dbGate.insertData("INSERT INTO account (account_id, name, type_id, balance) VALUES (" + user_id + ", 'Карта', " + AccountType.getIdByType("Карточный") + ", 0);");
-			dbGate.insertData("INSERT INTO account (account_id, name, type_id, balance) VALUES (" + user_id + ", 'Наличные', " + AccountType.getIdByType("Текущий") + ", 0);");
+			dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + user_id + ", 'Карта', " + AccountType.getIdByType("Карточный") + ", 0);");
+			dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + user_id + ", 'Наличные', " + AccountType.getIdByType("Текущий") + ", 0);");
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
 		}
@@ -73,8 +93,15 @@ public class RegistrationController extends RegistrationView {
 
 				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET accounts=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
 				dbGate.insertData(statement);
+
+				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET incomes=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
+				dbGate.insertData(statement);
+
+				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET expances=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));			
+				dbGate.insertData(statement);
 				
 				registerAccounts(rs.getInt("id"));
+				registerCategories(rs.getInt("id"));
 
 				MainWindow mw = new MainWindow(stage, username);
 				stage.setScene(mw.getScene());
