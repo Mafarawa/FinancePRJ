@@ -3,6 +3,7 @@ package com.mafarawa.controller.main;
 import com.mafarawa.view.main.AccountView;
 import com.mafarawa.model.AccountModel;
 import com.mafarawa.connect.DBGate;
+import com.mafarawa.controller.main.TopUpController;
 import com.mafarawa.controller.main.AddAccountController;
 import com.mafarawa.controller.main.RemoveAccountController;
 import com.mafarawa.controller.main.EditAccountController;
@@ -38,6 +39,10 @@ public class AccountController extends AccountView {
 			EditAccountController eac = new EditAccountController(stage, super.accountList.getSelectionModel().getSelectedItem());
 			eac.getStage().setOnCloseRequest(r -> getUserAccountsList(name));
 			super.editAccount.setOnAction(r -> eac.getStage().show());
+
+			TopUpController tuc = new TopUpController(stage, super.accountList.getSelectionModel().getSelectedItem(), name);
+			tuc.getStage().setOnCloseRequest(r -> getUserAccountsList(name));
+			super.topUpButton.setOnAction(r -> tuc.getStage().show());
 		});
 
 		super.addAccount.setOnAction(e -> aac.getStage().show());
