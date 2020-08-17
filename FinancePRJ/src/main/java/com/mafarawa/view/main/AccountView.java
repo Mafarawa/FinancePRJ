@@ -22,6 +22,8 @@ public class AccountView {
 	protected Button addAccount;
 	protected Button removeAccount;
 	protected Button editAccount;
+	protected Button topUpButton;
+	protected Button debitFromButton;
 	protected Scene scene;
 
 	public AccountView() {
@@ -36,10 +38,14 @@ public class AccountView {
 		addAccount = new Button("Добавить");
 		removeAccount = new Button("Удалить");
 		editAccount = new Button("Изменить");
+		topUpButton = new Button("Пополнить");
+		debitFromButton = new Button("Списать");
 
 		HBox buttonLayout = new HBox(10);
 		buttonLayout.setAlignment(Pos.BOTTOM_CENTER);
-		buttonLayout.getChildren().addAll(addAccount, removeAccount, editAccount);
+		buttonLayout.getChildren().addAll(addAccount, removeAccount, 
+										  editAccount, topUpButton, 
+										  debitFromButton);
 
 		GridPane infoLayout = new GridPane();
 		infoLayout.setHgap(20);
