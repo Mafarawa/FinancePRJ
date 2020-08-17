@@ -99,6 +99,9 @@ public class RegistrationController extends RegistrationView {
 
 				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET expances=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));			
 				dbGate.insertData(statement);
+
+				statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET transactions=" + rs.getInt("id") + "WHERE userfp.id=" + rs.getInt("id"));
+				dbGate.insertData(statement);
 				
 				registerAccounts(rs.getInt("id"));
 				registerCategories(rs.getInt("id"));
