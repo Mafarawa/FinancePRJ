@@ -10,17 +10,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 public class App extends Application {
     private SelectUserController suc;
     private RegistrationController ruc;
     private static Map<SelectScene, Scene> scenes;
 
+    private static Logger logger;
+    static { logger = Logger.getLogger(App.class.getName()); }
+
     public static void main(String[] args) {
         launch(args);
     }
 
     public void start(Stage stage) {
+        logger.info("===========================|STARTING PROGRAMM...|===========================");
         suc = new SelectUserController(stage);
         ruc = new RegistrationController(stage);
 
