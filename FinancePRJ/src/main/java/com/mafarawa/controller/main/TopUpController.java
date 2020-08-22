@@ -10,6 +10,7 @@ import java.sql.*;
 
 public class TopUpController extends TopUpView {
 	private int id;
+	
 	private static DBGate dbGate;
     private static Logger logger;
 
@@ -37,6 +38,7 @@ public class TopUpController extends TopUpView {
 		super.accountDoneButton.setOnAction(e -> transactionFromAccount(accountName));
 	}
 
+	// This method used to execute accounts in order to display them
 	private void getAccountList(String accountName) {
 		try {
 			ResultSet rs = dbGate.executeData("SELECT account.name " + 
@@ -52,6 +54,7 @@ public class TopUpController extends TopUpView {
 		}
 	}
 
+	// This method used to execute incomes in order to display them
 	private void getIncomeList() {
 		try {
 			ResultSet rs = dbGate.executeData("SELECT income.category " +
@@ -65,6 +68,7 @@ public class TopUpController extends TopUpView {
 		}
 	}
 
+	// This method used to transfer money from the first account to the second account	
 	private void transactionFromAccount(String accountName) {
 		String target = super.accountList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.accountInput.getText());
@@ -86,6 +90,7 @@ public class TopUpController extends TopUpView {
 		}
 	}
 
+	// This method used to transfer money from the account to selected income category	
 	private void transactionFromIncome(String accountName) {
 		String income = super.incomeList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.incomeInput.getText());

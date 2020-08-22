@@ -40,7 +40,9 @@ public class UserModel implements Cloneable {
 		logger.debug("New UserModel: " + this.toString());
 	}
 
+	// This method used to create shukher code
 	public static int createShukherCode(String name, String email, String password) {
+		// Casting characters to integers...
 		int[] nameArr = new int[name.length()];
 		for(int i = 0; i < name.length(); i++) {
 			nameArr[i] = name.charAt(i);
@@ -56,6 +58,7 @@ public class UserModel implements Cloneable {
 			passwordArr[i] = password.charAt(i);
 		}
 
+		// Divide into areas
 		String code = Arrays.toString(nameArr) + Arrays.toString(passwordArr) + Arrays.toString(emailArr);
 		String leftSide = code.substring(0, code.length() / 2);
 		String rightSide = code.substring(code.length() / 2, code.length() - 1);

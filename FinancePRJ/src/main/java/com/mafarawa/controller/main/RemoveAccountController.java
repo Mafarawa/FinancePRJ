@@ -17,8 +17,13 @@ import com.mafarawa.connect.DBGate;
 import com.mafarawa.view.main.RemoveAccountView;
 
 public class RemoveAccountController extends RemoveAccountView {
+	private static DBGate dbGate;
     private static Logger logger;
-    static { logger = Logger.getLogger(RemoveAccountController.class.getName()); }
+
+    static {
+    	dbGate = DBGate.getInstance();
+    	logger = Logger.getLogger(RemoveAccountController.class.getName());
+    }
 
 	public RemoveAccountController(Stage stage, String accountName) {
 		super(stage, accountName);
@@ -31,6 +36,7 @@ public class RemoveAccountController extends RemoveAccountView {
 	    super.noButton.setOnAction(e -> super.childStage.close());
 	}
 
+	// This method used to delete selected account
 	private void deleteAccount(String accountName) {
 		DBGate dbGate = DBGate.getInstance();
 
