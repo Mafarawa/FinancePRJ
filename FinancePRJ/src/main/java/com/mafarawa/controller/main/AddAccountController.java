@@ -20,8 +20,13 @@ import com.mafarawa.connect.DBGate;
 import com.mafarawa.view.main.AddAccountView;
 
 public class AddAccountController extends AddAccountView {
+	private static DBGate dbGate;
     private static Logger logger;
-    static { logger = Logger.getLogger(AddAccountController.class.getName()); }
+
+    static {
+    	dbGate = DBGate.getInstance();
+    	logger = Logger.getLogger(AddAccountController.class.getName());
+    }
 
 	public AddAccountController(Stage stage, String name) {
 		super(stage);
@@ -35,6 +40,7 @@ public class AddAccountController extends AddAccountView {
         super.doneButton.setOnAction(e -> addNewAccount(name));
 	}
 
+	// This method used to add new account
 	private void addNewAccount(String name) {
 		int userfp_id = 0;
 		String accountName = super.accountNameInput.getText();

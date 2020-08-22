@@ -17,8 +17,13 @@ public class SelectUserController extends SelectUserView {
 	private ArrayList<UserModel> users;
 	private ArrayList<AuthorizationController> authDialogs;
 	
+	private static DBGate dbGate;
 	private static Logger logger;
-	static { logger = Logger.getLogger(SelectUserController.class.getName()); }
+
+	static {
+		dbGate = DBGate.getInstance();
+		logger = Logger.getLogger(SelectUserController.class.getName());
+	}
 
 	public SelectUserController(Stage stage) {
 		super();
@@ -38,6 +43,7 @@ public class SelectUserController extends SelectUserView {
 		}
 	}
 
+	// This method used to display users
 	private void displayUsers(UserModel user) {
 		Button avatar = user.getAvatar();
 
@@ -46,11 +52,10 @@ public class SelectUserController extends SelectUserView {
 		logger.info("User: " + user.getName() + " on screen");
 	}
 
+	// This method used to execute users in order to display them
 	private void getUsersToDisplay() {
-		DBGate dbgate = DBGate.getInstance();
-
 		try {
-			ResultSet rs = dbgate.executeData("SELECT userfp.name, userfp.email, userfp.password, user_image.image_path FROM userfp JOIN user_image ON user_image.id = userfp.image;");
+			ResultSet rs = dbGate.executeData("SELECT userfp.name, userfp.email, userfp.password, user_image.image_path FROM userfp JOIN user_image ON user_image.id = userfp.image;");
 			while(rs.next()) {
 				String name = rs.getString(1);
 				String email = rs.getString(2);

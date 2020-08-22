@@ -35,12 +35,19 @@ public class DropPasswordController extends DropPasswordView {
     private boolean permission;
     private int valueInput;	
     private Runnable sendEmailThread;
+
+    private static DBGate dbGate;
     private static Logger logger;
-    static { logger = Logger.getLogger(DropPasswordController.class.getName()); }
+
+    static {
+        dbGate = DBGate.getInstance();
+        logger = Logger.getLogger(DropPasswordController.class.getName());
+    }
 
 	public DropPasswordController(Stage stage, UserModel user) {
 		super(stage);
 
+        // Message sending through second thread
         sendEmailThread = () -> { sendEmail(user.getName()); };
         new Thread(sendEmailThread).start();
 
@@ -56,11 +63,11 @@ public class DropPasswordController extends DropPasswordView {
         });		
 	}
 
+    // This method used to send a message to users email which contains a shukher code
     public void sendEmail(String name) {
-        DBGate dbGate = DBGate.getInstance();
         String shukherCode = "";
         String to = "";
-        String from = "financeprjnoreply@gmail.com";
+        String from = "financeprjnoreply@gmail.com"; 
         String host = "smtp.gmail.com";
         String port = "465";
 
@@ -68,21 +75,23 @@ public class DropPasswordController extends DropPasswordView {
 
         try {
             ResultSet rs = dbGate.executeData("SELECT userfp.shukher_code, userfp.email FROM userfp WHERE userfp.name=" + "'" + name + "'" + ";");
-            while(rs.next()) {
-                shukherCode = rs.getString(1);
-                to = rs.getString(2);
-            }
+            rs.next();
+            shukherCode = rs.getString(1);
+            to = rs.getString(2);
 
             logger.debug("From: " + from + " to: " + to);
 
+            // Loading properties... Maybe i should load props from props file?
             Properties props = System.getProperties();
             props.setProperty("mail.smtp.host", host);
             props.setProperty("mail.smtp.port", port);
             props.setProperty("mail.smtp.auth", "true");
             props.setProperty("mail.smtp.ssl.enable", "true");
 
+            // Authorizing on gmail
             Session session = Session.getInstance(props,
                 new Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication("financeprjnoreply", "_-sadjflk2421-_");
                     }
@@ -92,12 +101,14 @@ public class DropPasswordController extends DropPasswordView {
             String msg = "Здравствуйте <b>" + name + "!</b> Вы потеряли свой пароль. Вы можете сбросить пароль " +
                      "спомощью ниже приложеного кода: " + "\n" + "<hr>" + "\n" + "<h1>" + shukherCode + "</h1>";
 
+            // Preparing message for sending
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("Это вы забыли свой пароль?");
             message.setContent(msg, "text/html; charset=UTF-8");
 
+            // LIFT OFF!
             Transport.send(message);
             logger.info("Message was transported");
         } catch(AddressException ae) {
@@ -109,20 +120,23 @@ public class DropPasswordController extends DropPasswordView {
         }
     }
 
+    // This method used to drop password 
     private void dropPassword(int valueInput, UserModel user) {
         String password1 = Integer.toHexString(super.passwordInput.getText().hashCode());
         String password2 = Integer.toHexString(super.confirmPasswordInput.getText().hashCode());
 
+        // Confirming password...
         if(password1.equals(password2)) {
             logger.warn("Password will be changed to: " + password1);
-            DBGate dbGate = DBGate.getInstance();
             UserModel temp = new UserModel(user);
 
             try {
+                // Setting up new password
                 PreparedStatement statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET password = ? WHERE shukher_code = " + valueInput + ";");
                 statement.setString(1, password1);
                 dbGate.insertData(statement);
 
+                // Setting up new shukher code
                 statement = dbGate.getDatabase().prepareStatement("UPDATE userfp SET shukher_code = ? WHERE name = '" + temp.getName() + "'");
                 statement.setLong(1, temp.getShukherCode());
                 dbGate.insertData(statement);
@@ -136,9 +150,8 @@ public class DropPasswordController extends DropPasswordView {
         }
     }
 
+    // This method used to check shukher code that user typed with shukher code which contains in the database
     private boolean checkShukherCode(int value, String name) {
-        DBGate dbGate = DBGate.getInstance();
-
         try {
             ResultSet rs = dbGate.executeData("SELECT userfp.name FROM userfp WHERE shukher_code=" + value + ";");
             while(rs.next()) {

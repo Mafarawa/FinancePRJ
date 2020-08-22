@@ -24,8 +24,13 @@ public class EditAccountController extends EditAccountView {
 	private int accountType;
 	private int accountBalance;
 
+	private static DBGate dbGate;
     private static Logger logger;
-    static { logger = Logger.getLogger(EditAccountController.class.getName()); }
+
+    static {
+    	dbGate = DBGate.getInstance();
+    	logger = Logger.getLogger(EditAccountController.class.getName());
+    }
 
 	public EditAccountController(Stage stage, String accountName) {
 		super(stage);
@@ -42,9 +47,8 @@ public class EditAccountController extends EditAccountView {
         super.editAccount.setOnAction(e -> editAccount());
 	}
 
+	// This method used to execute account data in order to edit them
 	private void getSelectedAccount(String accountName) {
-		DBGate dbGate = DBGate.getInstance();
-
 		try {
 			ResultSet rs = dbGate.executeData("SELECT account.type_id, account.balance FROM account WHERE account.name='" + accountName + "';");
 			while(rs.next()) {
@@ -60,11 +64,11 @@ public class EditAccountController extends EditAccountView {
 		}
 	}	
 
+	// This method used to edit selected account
 	private void editAccount() {
 		String editedName;
 		int editedType;
 		int editedBalance;
-		DBGate dbGate = DBGate.getInstance();
 
 		if(super.accountNameInput.getText() == null || 
 			super.accountNameInput.getText().trim().isEmpty() ||

@@ -18,11 +18,17 @@ import org.apache.log4j.Logger;
 public class RegistrationController extends RegistrationView {
 	private SelectImageController sic;
 	
+	private static DBGate dbGate;
 	private static Logger logger;
-	static { logger = Logger.getLogger(RegistrationController.class.getName()); }
+
+	static {
+		dbGate = DBGate.getInstance();
+		logger = Logger.getLogger(RegistrationController.class.getName());
+	}
 
 	public RegistrationController(Stage stage) {
 		super();
+
 		sic = new SelectImageController(stage, super.selectImageButton);
 
 		super.selectImageButton.setOnAction(e -> sic.getStage().show());
@@ -30,10 +36,9 @@ public class RegistrationController extends RegistrationView {
 		super.cancelButton.setOnAction(e -> stage.setScene(App.selectScene(SelectScene.SELECT_USER_SCENE)));
 	}
 
+	// This method used to register default expance categories
 	private void registerCategories(int user_id) {
-		logger.debug("User id = " + user_id);
-
-		DBGate dbGate = DBGate.getInstance();
+		logger.debug("Registering default expance categories...");
 
 		try {
 			dbGate.insertData("INSERT INTO income(income_id, category) VALUES(" + user_id + ", 'Зарплата');");
@@ -50,10 +55,9 @@ public class RegistrationController extends RegistrationView {
 		}
 	}
 
+	// This method used to register default accounts
 	private void registerAccounts(int user_id) {
-		logger.debug("User id = " + user_id);
-
-		DBGate dbGate = DBGate.getInstance();
+		logger.debug("Registering default accounts...");
 
 		try {
 			dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + user_id + ", 'Карта', " + AccountType.getIdByType("Карточный") + ", 0);");
@@ -63,19 +67,18 @@ public class RegistrationController extends RegistrationView {
 		}
 	}
 
+	// This method used to register user
 	private void registerUser(Stage stage) {
 		String username = super.usernameInput.getText();
 		String email = super.emailInput.getText();
-		String password = Integer.toHexString(super.passwordInput.getText().hashCode());
+		String password = Integer.toHexString(super.passwordInput.getText().hashCode()); // Hashing password
 		int userImage = sic.getUserImageValue();
-		long shukherCode = UserModel.createShukherCode(username, email, password);
+		long shukherCode = UserModel.createShukherCode(username, email, password); // Generating shukher code
 
-		if(username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+		if(username.isEmpty() || email.isEmpty() || password.isEmpty()) { 
 			checkLabel.setText("Заполните все поля");
 			super.inputLayout.getChildren().add(checkLabel);
 		} else {
-			DBGate dbGate = DBGate.getInstance();
-
 			try {
 				PreparedStatement statement = dbGate.getDatabase().prepareStatement("INSERT INTO userfp (name, email, password, image, shukher_code) VALUES(?, ?, ?, ?, ?)");
 				statement.setString(1, username);

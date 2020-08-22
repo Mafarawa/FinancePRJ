@@ -10,6 +10,7 @@ import java.sql.*;
 
 public class DebitAccountController extends DebitAccountView {
 	private int id;
+
 	private static DBGate dbGate;
     private static Logger logger;
 
@@ -39,6 +40,7 @@ public class DebitAccountController extends DebitAccountView {
 		super.accountDoneButton.setOnAction(e -> transactionFromAccount(accountName));
 	}
 
+	// This method used to execute accounts in order to display them
 	private void getAccountList(String accountName) {
 		try {
 			ResultSet rs = dbGate.executeData("SELECT account.name " + 
@@ -54,6 +56,7 @@ public class DebitAccountController extends DebitAccountView {
 		}
 	}
 
+	// This method used to execute expances in order to display them
 	private void getExpanceList() {
 		try {
 			ResultSet rs = dbGate.executeData("SELECT expance.category " +
@@ -67,6 +70,7 @@ public class DebitAccountController extends DebitAccountView {
 		}
 	}
 
+	// This method used to transfer money from the first account to the second account
 	private void transactionFromAccount(String accountName) {
 		String target = super.accountList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.accountInput.getText());
@@ -83,6 +87,7 @@ public class DebitAccountController extends DebitAccountView {
 		}
 	}
 
+	// This method used to transfer money from the account to the selected expance category
 	private void transactionFromExpance(String accountName) {
 		int sum = Integer.parseInt(super.expanceInput.getText());
 		String transaction = "BEGIN;" +
