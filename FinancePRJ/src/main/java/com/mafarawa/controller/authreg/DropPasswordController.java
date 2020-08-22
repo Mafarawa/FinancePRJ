@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
@@ -25,18 +26,23 @@ import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.AddressException;
+import javax.mail.MessagingException;
+import java.lang.Runnable;
 import org.apache.log4j.Logger;
 
 public class DropPasswordController extends DropPasswordView {
     private boolean permission;
     private int valueInput;	
+    private Runnable sendEmailThread;
     private static Logger logger;
     static { logger = Logger.getLogger(DropPasswordController.class.getName()); }
 
 	public DropPasswordController(Stage stage, UserModel user) {
 		super(stage);
 
-        sendEmail(user.getName());
+        sendEmailThread = () -> { sendEmail(user.getName()); };
+        new Thread(sendEmailThread).start();
 
         super.shukherCodeInput.setOnKeyReleased(e -> {
             valueInput = 0;
@@ -68,28 +74,24 @@ public class DropPasswordController extends DropPasswordView {
             }
 
             logger.debug("From: " + from + " to: " + to);
-        } catch(Exception e) {
-            logger.error("Exception: ", e);
-        }
 
-        Properties props = System.getProperties();
-        props.setProperty("mail.smtp.host", host);
-        props.setProperty("mail.smtp.port", port);
-        props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.smtp.ssl.enable", "true");
+            Properties props = System.getProperties();
+            props.setProperty("mail.smtp.host", host);
+            props.setProperty("mail.smtp.port", port);
+            props.setProperty("mail.smtp.auth", "true");
+            props.setProperty("mail.smtp.ssl.enable", "true");
 
-        Session session = Session.getInstance(props,
-            new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("financeprjnoreply", "_-sadjflk2421-_");
+            Session session = Session.getInstance(props,
+                new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication("financeprjnoreply", "_-sadjflk2421-_");
+                    }
                 }
-            }
-        );
+            );
 
-        String msg = "Здравствуйте <b>" + name + "!</b> Вы потеряли свой пароль. Вы можете сбросить пароль " +
+            String msg = "Здравствуйте <b>" + name + "!</b> Вы потеряли свой пароль. Вы можете сбросить пароль " +
                      "спомощью ниже приложеного кода: " + "\n" + "<hr>" + "\n" + "<h1>" + shukherCode + "</h1>";
 
-        try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
@@ -98,8 +100,12 @@ public class DropPasswordController extends DropPasswordView {
 
             Transport.send(message);
             logger.info("Message was transported");
-        } catch(Exception e) {
-            logger.error("Exception: " + e);
+        } catch(AddressException ae) {
+            logger.error("Exception: ", ae);
+        } catch(MessagingException me) {
+            logger.error("Exception: ", me);
+        } catch(SQLException sqle) {
+            logger.error("Exception: ", sqle);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.mafarawa.view.main;
 
+import com.mafarawa.model.AccountModel;
+
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -17,7 +19,7 @@ public class AccountView {
 	protected Label accountTypeValue;
 	protected Label accountBalance;
 	protected Label accountBalanceValue;
-	protected ListView<String> accountList;
+	protected ListView<AccountModel> accountList;
 	protected SplitPane splitPane;
 	protected Button addAccount;
 	protected Button removeAccount;

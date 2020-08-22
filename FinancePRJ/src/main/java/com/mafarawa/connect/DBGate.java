@@ -1,3 +1,5 @@
+// This class used to execute data from database and insert data to database
+
 package com.mafarawa.connect;
 
 import java.sql.*;
@@ -21,6 +23,7 @@ public class DBGate {
 		return instance;
 	}
 
+	// Connecting to database
 	public Connection getDatabase() {
 		if(database == null) {
 			try {
@@ -39,6 +42,7 @@ public class DBGate {
 		return database;
 	}
 
+	// Execute transaction
 	public void transaction(String query) throws SQLException {
 		logger.debug("Trying to transact: " + query);
 
@@ -51,6 +55,7 @@ public class DBGate {
 		logger.info("Transaction execute");		
 	}
 
+	// Execute data
 	public ResultSet executeData(String query) throws SQLException {
 		if(database == null) {
 			getDatabase();
@@ -63,6 +68,7 @@ public class DBGate {
 		return rs;
 	}
 
+	// Insert data
 	public void insertData(PreparedStatement ps) throws SQLException {
 		if(database == null) {
 			getDatabase();
@@ -72,6 +78,7 @@ public class DBGate {
 		logger.info("PreparedStatement executed");
 	}
 
+	// Insert data
 	public void insertData(String st) throws SQLException {
 		logger.debug("Trying to execute: " + st);
 

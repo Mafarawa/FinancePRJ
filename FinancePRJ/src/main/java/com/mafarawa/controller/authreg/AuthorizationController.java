@@ -31,7 +31,7 @@ public class AuthorizationController extends AuthorizationView {
 
         setUserAvatar(user.cloneUserAvatar());
         super.doneButton.setOnAction(e -> authorizeUser(user.getName(), stage));
-        super.dropPasswordButton.setOnAction(e -> new DropPasswordController(childStage, user));
+        super.dropPasswordButton.setOnAction(e -> new DropPasswordController(childStage, user).getStage().show());
     }
 
     private void setUserAvatar(Button userAvatar) {
