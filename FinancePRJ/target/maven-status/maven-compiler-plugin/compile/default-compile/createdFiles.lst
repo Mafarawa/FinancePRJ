@@ -8,6 +8,7 @@ com/mafarawa/controller/authreg/DropPasswordController.class
 com/mafarawa/controller/main/TopUpController.class
 com/mafarawa/controller/main/AddAccountController.class
 com/mafarawa/view/authreg/DropPasswordView.class
+com/mafarawa/controller/main/AccountController$1.class
 com/mafarawa/controller/authreg/SelectUserController.class
 com/mafarawa/view/authreg/AuthorizationView.class
 com/mafarawa/controller/authreg/SelectImageController.class
