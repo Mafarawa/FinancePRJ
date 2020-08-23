@@ -64,7 +64,7 @@ public class DropPasswordController extends DropPasswordView {
 	}
 
     // This method used to send a message to users email which contains a shukher code
-    public void sendEmail(String name) {
+    private void sendEmail(String name) {
         String shukherCode = "";
         String to = "";
         String from = "financeprjnoreply@gmail.com"; 
