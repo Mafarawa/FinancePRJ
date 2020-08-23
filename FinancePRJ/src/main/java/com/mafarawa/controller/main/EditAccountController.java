@@ -66,19 +66,10 @@ public class EditAccountController extends EditAccountView {
 
 	// This method used to edit selected account
 	private void editAccount() {
-		String editedName;
-		int editedType;
-		int editedBalance;
-
-		if(super.accountNameInput.getText() == null || 
-			super.accountNameInput.getText().trim().isEmpty() ||
-			super.accountBalanceInput.getText() == null ||
-			super.accountBalanceInput.getText().trim().isEmpty()) {
-			super.checkLabel.setText("Заполните все поля!");
-		} else {
-			editedName = super.accountNameInput.getText();
-			editedType = AccountType.getIdByType(super.accountTypeBox.getValue());
-			editedBalance = Integer.parseInt(super.accountBalanceInput.getText());			
+		if(checkInputs()) {
+			String editedName = super.accountNameInput.getText();
+			int editedType = AccountType.getIdByType(super.accountTypeBox.getValue());
+			int editedBalance = Integer.parseInt(super.accountBalanceInput.getText());			
 
 			try {
 				dbGate.insertData("UPDATE account SET name='" + editedName + "'" + 
@@ -92,6 +83,32 @@ public class EditAccountController extends EditAccountView {
 				logger.error("Exception: ", e);
 			}
 		}
+	}
+
+	// This method checking can this input be inserted into the database
+	private boolean checkInputs() {
+		String accountName = super.accountNameInput.getText();
+		String accountType = super.accountTypeBox.getValue();
+		String accountBalance = super.accountBalanceInput.getText();
+
+		// Check if inputs are empty
+		if(super.accountNameInput.getText() == null || 
+		   super.accountNameInput.getText().trim().isEmpty() ||
+		   super.accountBalanceInput.getText() == null ||
+		   super.accountBalanceInput.getText().trim().isEmpty()) {
+			super.checkLabel.setText("Заполните все поля!");
+			return false;
+		}		
+
+		// Checking if accountBalance has letters
+		for(int i = 0; i < accountBalance.length(); i++) {
+			if(!(Character.isDigit(accountBalance.charAt(i)) == true)) {
+				super.checkLabel.setText("Поле для ввода баланса должо содержать только цифры!");
+				return false;
+			}
+		}
+
+		return true;		
 	}
 
 	public Scene getScene() { return this.scene; }
