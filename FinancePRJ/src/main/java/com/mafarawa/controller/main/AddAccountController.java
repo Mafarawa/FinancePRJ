@@ -41,20 +41,16 @@ public class AddAccountController extends AddAccountView {
 	}
 
 	// This method used to add new account
-	private void addNewAccount(String name) {
-		int userfp_id = 0;
+	private void addNewAccount(String name) {		
 		String accountName = super.accountNameInput.getText();
 		String accountType = super.accountTypeBox.getValue();
 		String accountBalance = super.accountBalanceInput.getText();
-		DBGate dbGate = DBGate.getInstance();
 
-		if(accountName.isEmpty() || accountBalance.isEmpty()) {
-			super.checkLabel.setText("Заполните все поля!");
-		} else {		
+		if(checkInputs()) {
 			try {
 				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
 				rs.next();
-				userfp_id = rs.getInt("id");
+				int userfp_id = rs.getInt("id");
 
 				dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + 
 					userfp_id + ", '" + accountName + "', " + AccountType.getIdByType(accountType) + ", " + accountBalance + ");");
@@ -66,8 +62,36 @@ public class AddAccountController extends AddAccountView {
 				super.checkLabel.setText("Счет с именем '" + accountName + "' уже существует");
 				logger.error("Exception: ", e);
 			}
-
 		}
+	}
+
+	// This method checking can this input be inserted into the database
+	private boolean checkInputs() {
+		String accountName = super.accountNameInput.getText();
+		String accountType = super.accountTypeBox.getValue();
+		String accountBalance = super.accountBalanceInput.getText();
+
+		// Checking account name
+		try {
+			ResultSet rs = dbGate.executeData("SELECT EXISTS(SELECT 1 FROM account WHERE name = '" + accountName + "');");
+			while(rs.next()) {
+				if(rs.getBoolean("exists") == true) {
+					super.checkLabel.setText("Счет с таким именем уже существует!");
+					return false;
+				}
+			}
+		} catch(SQLException sqle) {
+			logger.error("Exception: ", sqle);
+		}
+
+		for(int i = 0; i < accountBalance.length(); i++) {
+			if(!(Character.isDigit(accountBalance.charAt(i)) == true)) {
+				super.checkLabel.setText("Поле для ввода баланса должо содержать только цифры!");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public Scene getScene() { return this.scene; }
