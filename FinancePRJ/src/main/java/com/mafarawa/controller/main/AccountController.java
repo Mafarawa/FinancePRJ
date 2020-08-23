@@ -57,10 +57,10 @@ public class AccountController extends AccountView {
 				RemoveAccountController rac = new RemoveAccountController(stage, newValue.getAccountName());
 				rac.getStage().setOnCloseRequest(r -> {
 					getUserAccountsList(name);
-					accountList.getSelectionModel().select(0);	
 					accountNameValue.setText("");							
 					accountTypeValue.setText("");							
 					accountBalanceValue.setText("");							
+					accountList.getSelectionModel().select(0);	
 				});
 
 				removeAccount.setOnAction(r -> rac.getStage().show());
