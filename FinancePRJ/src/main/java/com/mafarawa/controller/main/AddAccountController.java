@@ -71,6 +71,15 @@ public class AddAccountController extends AddAccountView {
 		String accountType = super.accountTypeBox.getValue();
 		String accountBalance = super.accountBalanceInput.getText();
 
+		// Check if inputs are empty
+		if(super.accountNameInput.getText() == null || 
+		   super.accountNameInput.getText().trim().isEmpty() ||
+		   super.accountBalanceInput.getText() == null ||
+		   super.accountBalanceInput.getText().trim().isEmpty()) {
+			super.checkLabel.setText("Заполните все поля!");
+			return false;
+		}
+
 		// Checking account name
 		try {
 			ResultSet rs = dbGate.executeData("SELECT EXISTS(SELECT 1 FROM account WHERE name = '" + accountName + "');");
@@ -84,6 +93,7 @@ public class AddAccountController extends AddAccountView {
 			logger.error("Exception: ", sqle);
 		}
 
+		// Checking if accountBalance has letters
 		for(int i = 0; i < accountBalance.length(); i++) {
 			if(!(Character.isDigit(accountBalance.charAt(i)) == true)) {
 				super.checkLabel.setText("Поле для ввода баланса должо содержать только цифры!");
