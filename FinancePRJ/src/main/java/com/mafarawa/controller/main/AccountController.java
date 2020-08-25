@@ -48,49 +48,52 @@ public class AccountController extends AccountView {
 			@Override
 			public void changed(ObservableValue<? extends AccountModel> observable,
 								AccountModel oldValue, AccountModel newValue) {
-				// Displaing account data
-				accountNameValue.setText(newValue.getAccountName());
-				accountTypeValue.setText(newValue.getAccountType());
-				accountBalanceValue.setText(String.valueOf(newValue.getAccountBalance()));
+				try {
+					// Displaing account data
+					accountNameValue.setText(newValue.getAccountName());
+					accountTypeValue.setText(newValue.getAccountType());
+					accountBalanceValue.setText(String.valueOf(newValue.getAccountBalance()));
 
-				// This controller used to remove selected account
-				RemoveAccountController rac = new RemoveAccountController(stage, newValue.getAccountName());
-				rac.getStage().setOnCloseRequest(r -> {
-					getUserAccountsList(name);
-					accountNameValue.setText("");							
-					accountTypeValue.setText("");							
-					accountBalanceValue.setText("");							
-					accountList.getSelectionModel().select(0);	
-				});
+					// This controller used to remove selected account
+					RemoveAccountController rac = new RemoveAccountController(stage, newValue.getAccountName());
+					rac.getStage().setOnCloseRequest(r -> {
+						getUserAccountsList(name);
+						accountNameValue.setText("");							
+						accountTypeValue.setText("");							
+						accountBalanceValue.setText("");							
+						accountList.getSelectionModel().select(0);	
+					});
 
-				removeAccount.setOnAction(r -> rac.getStage().show());
+					removeAccount.setOnAction(r -> rac.getStage().show());
 
-				// This controller used to edit data of selected account 
-				EditAccountController eac = new EditAccountController(stage, newValue.getAccountName());
-				eac.getStage().setOnCloseRequest(r -> {
-					getUserAccountsList(name);
-					accountList.getSelectionModel().select(0);								
-				});
-				
-				editAccount.setOnAction(r -> eac.getStage().show());
+					// This controller used to edit data of selected account 
+					EditAccountController eac = new EditAccountController(stage, newValue.getAccountName());
+					eac.getStage().setOnCloseRequest(r -> {
+						getUserAccountsList(name);
+						accountList.getSelectionModel().select(0);								
+					});
+					
+					editAccount.setOnAction(r -> eac.getStage().show());
 
-				// This controller used to top up balance of selected account
-				TopUpController tuc = new TopUpController(stage, newValue.getAccountName(), name);
-				tuc.getStage().setOnCloseRequest(r -> {
-					getUserAccountsList(name);
-					accountList.getSelectionModel().select(0);								
-				});
+					// This controller used to top up balance of selected account
+					TopUpController tuc = new TopUpController(stage, newValue.getAccountName(), name);
+					tuc.getStage().setOnCloseRequest(r -> {
+						getUserAccountsList(name);
+						accountList.getSelectionModel().select(0);								
+					});
 
-				topUpButton.setOnAction(r -> tuc.getStage().show());
+					topUpButton.setOnAction(r -> tuc.getStage().show());
 
-				// This controller used to debit balance of selected account
-				DebitAccountController dac = new DebitAccountController(stage, newValue.getAccountName(), name);
-				dac.getStage().setOnCloseRequest(r -> {
-					getUserAccountsList(name);
-					accountList.getSelectionModel().select(0);								
-				});
+					// This controller used to debit balance of selected account
+					DebitAccountController dac = new DebitAccountController(stage, newValue.getAccountName(), name);
+					dac.getStage().setOnCloseRequest(r -> {
+						getUserAccountsList(name);
+						accountList.getSelectionModel().select(0);								
+					});
 
-				debitFromButton.setOnAction(r -> dac.getStage().show());
+					debitFromButton.setOnAction(r -> dac.getStage().show());
+
+				} catch(NullPointerException npe) {}
 			}
 		});
 	}
