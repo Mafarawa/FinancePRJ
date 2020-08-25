@@ -20,49 +20,18 @@ public class SelectImageController extends SelectImageView {
 
         userImageValue = 1;
 
-        blackUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(1));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(1)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
-
-        blueUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(2));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(2)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
-
-        greenUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(3));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(3)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
-
-        redUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(4));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(4)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
-
-        whiteUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(5));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(5)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
-
-        yellowUserButton.setOnAction(e -> {
-            setUserImageValue(UserImage.getImageById(6));
-            Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(6)), 100, 100, false, false);
-            button.setGraphic(new ImageView(image));
-            childStage.close();
-        });
+        for(int i = super.buttons.size() - 1; i > 0; i--) {
+            int i_ = i;
+            super.buttons.get(i).setOnAction(e -> {
+                setUserImageValue(UserImage.getImageById(i_));
+                Image image = new Image(getClass().getResourceAsStream(UserImage.getImageById(i_)), 100, 100, false, false);
+                button.setGraphic(new ImageView(image));
+                childStage.close();
+            });
+        }
 	}
 
+    // This method used to remember selected image
     private void setUserImageValue(String selectedImage) {
         userImageValue = UserImage.getIdByImage(selectedImage);
     }
