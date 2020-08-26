@@ -8,9 +8,12 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+
+import java.time.LocalDate;
 
 public class TopUpView {
 	protected TabPane tabPane;
@@ -22,6 +25,8 @@ public class TopUpView {
 	protected ListView<String> accountList;
 	protected TextField incomeInput;
 	protected TextField accountInput;
+	protected DatePicker incomeDatePicker;
+	protected DatePicker accountDatePicker;
 	protected Scene scene;
 	protected Stage childStage;
 
@@ -29,6 +34,7 @@ public class TopUpView {
 		incomeList = new ListView<>();
 		incomeInput = new TextField();
 		incomeDoneButton = new Button("Перевести");
+		incomeDatePicker = new DatePicker(LocalDate.now());
 
 		incomeList.setPrefHeight(150);
 		incomeInput.setPromptText("Сумма");
@@ -36,13 +42,14 @@ public class TopUpView {
 		VBox incomeLayout = new VBox(10);
 		incomeLayout.setPadding(new Insets(10, 10, 10, 10));	
 		incomeLayout.setAlignment(Pos.CENTER);
-		incomeLayout.getChildren().addAll(incomeList, incomeInput, incomeDoneButton);
+		incomeLayout.getChildren().addAll(incomeList, incomeInput, incomeDatePicker, incomeDoneButton);
 
 		incomeTab = new Tab("С Дохода", incomeLayout);
 
 		accountList = new ListView<>();
 		accountInput = new TextField();
 		accountDoneButton = new Button("Перевести");
+		accountDatePicker = new DatePicker(LocalDate.now());
 
 		accountList.setPrefHeight(150);
 		accountInput.setPromptText("Сумма");
@@ -50,7 +57,7 @@ public class TopUpView {
 		VBox accountLayout = new VBox(10);
 		accountLayout.setPadding(new Insets(10, 10, 10, 10));	
 		accountLayout.setAlignment(Pos.CENTER);
-		accountLayout.getChildren().addAll(accountList, accountInput, accountDoneButton);
+		accountLayout.getChildren().addAll(accountList, accountInput, accountDatePicker, accountDoneButton);
 
 		accountTab = new Tab("Со Счета", accountLayout);
 
