@@ -110,7 +110,9 @@ public class TopUpController extends TopUpView {
 		}
 
 		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
-    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+
+    	logger.info("Transaction completed");			
 	}
 
 	// This method used to transfer money from the account to selected income category	
@@ -119,11 +121,6 @@ public class TopUpController extends TopUpView {
 
 		String income = super.incomeList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.incomeInput.getText());
-		String transaction = "BEGIN;" +
-							 "UPDATE account SET balance = balance + " + sum + " WHERE name='" + accountName + "';" +
-							 "INSERT INTO transactions () " + 
-							 "VALUES(" + this.id +", '" + income + "', " + 1 + ", " + sum + ", '" + accountName + "');" +							 
-							 "COMMIT;";
 
 		try {
 			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " + 
@@ -150,5 +147,7 @@ public class TopUpController extends TopUpView {
 
 		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }		
     	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+
+    	logger.info("Transaction completed");
 	}
 }
