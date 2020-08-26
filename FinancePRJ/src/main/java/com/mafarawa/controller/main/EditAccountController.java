@@ -23,6 +23,7 @@ public class EditAccountController extends EditAccountView {
 	private String accountName;
 	private int accountType;
 	private int accountBalance;
+	private int account_id;
 
 	private static DBGate dbGate;
     private static Logger logger;
@@ -35,6 +36,17 @@ public class EditAccountController extends EditAccountView {
 	public EditAccountController(Stage stage, String accountName) {
 		super(stage);
 
+		DBGate dbGate = DBGate.getInstance();
+
+		try {
+			ResultSet rs = dbGate.executeData("SELECT account.account_id FROM account WHERE account.name = '" + accountName + "';");
+			rs.next();
+			account_id = rs.getInt("account_id");
+		} catch(SQLException sqle) {
+			logger.error("Exception: ", sqle);
+		}
+
+
 		this.accountName = accountName;
 		getSelectedAccount(accountName);
 
@@ -44,7 +56,7 @@ public class EditAccountController extends EditAccountView {
         	super.childStage.close();
         });
 
-        super.editAccount.setOnAction(e -> editAccount());
+        super.editAccount.setOnAction(e -> editAccount(accountName));
 	}
 
 	// This method used to execute account data in order to edit them
@@ -65,21 +77,37 @@ public class EditAccountController extends EditAccountView {
 	}	
 
 	// This method used to edit selected account
-	private void editAccount() {
+	private void editAccount(String accountName) {
 		if(checkInputs()) {
 			String editedName = super.accountNameInput.getText();
 			int editedType = AccountType.getIdByType(super.accountTypeBox.getValue());
 			int editedBalance = Integer.parseInt(super.accountBalanceInput.getText());			
 
 			try {
-				dbGate.insertData("UPDATE account SET name='" + editedName + "'" + 
-								  ", type_id=" + editedType + 
-								  ", balance=" + editedBalance + " WHERE name='" + this.accountName + "';");
+				PreparedStatement updateAccountName = dbGate.getDatabase().prepareStatement("UPDATE account " +
+																							"SET name = REPLACE(name, ?, ?) " +
+																							"WHERE account_id = " + account_id);
+				updateAccountName.setString(1, accountName);
+				updateAccountName.setString(2, editedName);
+				dbGate.insertData(updateAccountName);
+
+				PreparedStatement updateAccountTransactions = dbGate.getDatabase().prepareStatement("UPDATE transactions " + 
+																									"SET from_point = REPLACE(from_point, ?, ?), " +
+																									"to_point = REPLACE(to_point, ?, ?) " +
+																									"WHERE transaction_id = " + account_id);
+				updateAccountTransactions.setString(1, accountName);
+				updateAccountTransactions.setString(2, editedName);
+				updateAccountTransactions.setString(3, accountName);
+				updateAccountTransactions.setString(4, editedName);
+				dbGate.insertData(updateAccountTransactions);
 
 				super.accountNameInput.clear();
 				super.accountBalanceInput.clear();
 	        	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+
+	        	try { dbGate.getDatabase().commit(); } catch(SQLException sqle) { logger.error("Exception: ", sqle); }
 			} catch(SQLException e) {
+				try { dbGate.getDatabase().rollback(); } catch(SQLException sqle) { logger.error("Exception: ", sqle); }
 				logger.error("Exception: ", e);
 			}
 		}
