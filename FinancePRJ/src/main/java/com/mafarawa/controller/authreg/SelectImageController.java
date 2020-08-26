@@ -20,7 +20,7 @@ public class SelectImageController extends SelectImageView {
 
         userImageValue = 1;
 
-        for(int i = super.buttons.size() - 1; i > 0; i--) {
+        for(int i = super.buttons.size() - 1; i >= 0; i--) {
             int i_ = i;
             super.buttons.get(i).setOnAction(e -> {
                 setUserImageValue(UserImage.getImageById(i_));
