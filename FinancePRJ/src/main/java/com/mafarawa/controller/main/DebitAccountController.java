@@ -80,7 +80,7 @@ public class DebitAccountController extends DebitAccountView {
 							 "COMMIT;";
 
 		try {
-			dbGate.transaction(transaction);
+			// dbGate.transaction(transaction);
 	    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
@@ -95,7 +95,7 @@ public class DebitAccountController extends DebitAccountView {
 							 "COMMIT;";
 
 		try {
-			dbGate.transaction(transaction);
+			// dbGate.transaction(transaction);
 	    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
