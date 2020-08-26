@@ -17,8 +17,6 @@ public class DebitAccountController extends DebitAccountView {
 	public DebitAccountController(Stage stage, String accountName, String username) {
 		super(stage);
 
-		logger.debug("Debit account: " + accountName);
-
 		DBGate dbGate = DBGate.getInstance();
     	try {
     		ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + username +"';");
@@ -133,10 +131,10 @@ public class DebitAccountController extends DebitAccountView {
 			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
 																					   "VALUES (?, ?, ?, ?, ?, ?);");
 			writeTransaction.setInt(1, this.id);
-			writeTransaction.setString(2, expance);
+			writeTransaction.setString(2, accountName);
 			writeTransaction.setInt(3, 2);
 			writeTransaction.setInt(4, sum);
-			writeTransaction.setString(5, accountName);
+			writeTransaction.setString(5, expance);
 			writeTransaction.setObject(6, super.expanceDatePicker.getValue());
 			dbGate.insertData(writeTransaction);
 
