@@ -11,16 +11,13 @@ import java.sql.*;
 public class TopUpController extends TopUpView {
 	private int id;
 	
-	private static DBGate dbGate;
     private static Logger logger;
-
-    static {
-    	dbGate = DBGate.getInstance();
-    	logger = Logger.getLogger(TopUpController.class.getName());
-    }
+	static { logger = Logger.getLogger(TopUpController.class.getName()); }
 
 	public TopUpController(Stage stage, String accountName, String username) {
 		super(stage);
+
+		DBGate dbGate = DBGate.getInstance();
 
     	try {
     		ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + username +"';");
@@ -40,6 +37,8 @@ public class TopUpController extends TopUpView {
 
 	// This method used to execute accounts in order to display them
 	private void getAccountList(String accountName) {
+		DBGate dbGate = DBGate.getInstance();
+
 		try {
 			ResultSet rs = dbGate.executeData("SELECT account.name " + 
 											  "FROM account " + 
@@ -56,6 +55,8 @@ public class TopUpController extends TopUpView {
 
 	// This method used to execute incomes in order to display them
 	private void getIncomeList() {
+		DBGate dbGate = DBGate.getInstance();
+
 		try {
 			ResultSet rs = dbGate.executeData("SELECT income.category " +
 											  "FROM income " + 
@@ -70,41 +71,84 @@ public class TopUpController extends TopUpView {
 
 	// This method used to transfer money from the first account to the second account	
 	private void transactionFromAccount(String accountName) {
+		DBGate dbGate = DBGate.getInstance();
+
 		String target = super.accountList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.accountInput.getText());
-		String transaction = "BEGIN;" +
-							 "UPDATE account " + 
-							 "SET balance = balance + " + sum + " " +
-							 "WHERE name='" + accountName + "';" +
-							 "UPDATE account " + 
-							 "SET balance = balance - " + sum + " WHERE name='" + target + "';" +
-							 "INSERT INTO transactions (transaction_id, from_point, action, amount, to_point) " + 
-							 "VALUES(" + this.id +", '" + accountName + "', " + 3 + ", " + sum + ", '" + target + "');" +
-							 "COMMIT;";
 
 		try {
-			dbGate.transaction(transaction);
-	    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+			// Increase balance of selected account
+			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " +
+																					  "SET balance = balance + ? " +
+																					  "WHERE name = ?;");
+			accountAddition.setInt(1, sum);
+			accountAddition.setString(2, accountName);
+			dbGate.insertData(accountAddition);
+
+			// Decrease balance of selected account
+			PreparedStatement accountSubstraction = dbGate.getDatabase().prepareStatement("UPDATE account " + 
+																					  	  "SET balance = balance - ? " +
+																					   	  "WHERE name = ?;");
+			accountSubstraction.setInt(1, sum);
+			accountSubstraction.setString(2, target);
+			dbGate.insertData(accountSubstraction);
+
+			// Document transaction
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			writeTransaction.setInt(1, this.id);
+			writeTransaction.setString(2, accountName);
+			writeTransaction.setInt(3, 3);
+			writeTransaction.setInt(4, sum);
+			writeTransaction.setString(5, target);
+			writeTransaction.setObject(6, super.accountDatePicker.getValue());
+			dbGate.insertData(writeTransaction);
+
 		} catch(Exception e) {
+			try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
 			logger.error("Exception: ", e);
 		}
+
+		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
+    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
 	}
 
 	// This method used to transfer money from the account to selected income category	
 	private void transactionFromIncome(String accountName) {
+		DBGate dbGate = DBGate.getInstance();
+
 		String income = super.incomeList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.incomeInput.getText());
 		String transaction = "BEGIN;" +
 							 "UPDATE account SET balance = balance + " + sum + " WHERE name='" + accountName + "';" +
-							 "INSERT INTO transactions (transaction_id, from_point, action, amount, to_point) " + 
+							 "INSERT INTO transactions () " + 
 							 "VALUES(" + this.id +", '" + income + "', " + 1 + ", " + sum + ", '" + accountName + "');" +							 
 							 "COMMIT;";
 
 		try {
-			dbGate.transaction(transaction);
-	    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
+			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " + 
+																					  "SET balance = balance + ? " + 
+																					  "WHERE name = ?;");
+			accountAddition.setInt(1, sum);
+			accountAddition.setString(2, accountName);
+			dbGate.insertData(accountAddition);
+
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			writeTransaction.setInt(1, this.id);
+			writeTransaction.setString(2, income);
+			writeTransaction.setInt(3, 1);
+			writeTransaction.setInt(4, sum);
+			writeTransaction.setString(5, accountName);
+			writeTransaction.setObject(6, super.accountDatePicker.getValue());
+			dbGate.insertData(writeTransaction);
+
 		} catch(Exception e) {
+			try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
 			logger.error("Exception: ", e);
 		}
+
+		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }		
+    	super.childStage.fireEvent(new WindowEvent(super.childStage, WindowEvent.WINDOW_CLOSE_REQUEST));			
 	}
 }
