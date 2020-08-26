@@ -19,7 +19,6 @@ public class DBGate {
 			instance = new DBGate();
 		}
 
-		logger.info("Instance of DBGate achieved");
 		return instance;
 	}
 
@@ -32,29 +31,17 @@ public class DBGate {
 						"gosha",
 						"mafarawa228"
 				);
+				database.setAutoCommit(false);
+
 				logger.info("Database connected");
 			} catch(Exception e) {
 				logger.error("Exception", e);
 			}
 		}
 
-		logger.info("Database achieved");
 		return database;
 	}
-
-	// Execute transaction
-	public void transaction(String query) throws SQLException {
-		logger.debug("Trying to transact: " + query);
-
-		if(database == null) {
-			getDatabase();
-		}
-
-		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		statement.execute(query);
-		logger.info("Transaction execute");		
-	}
-
+	
 	// Execute data
 	public ResultSet executeData(String query) throws SQLException {
 		if(database == null) {
