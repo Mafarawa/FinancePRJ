@@ -1,11 +1,11 @@
-package com.mafarawa.view.main;
+package com.mafarawa.view.accounts;
 
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 
-import com.mafarawa.controller.main.AccountController;
+import com.mafarawa.controller.accounts.AccountController;
 
 public class MainWindow {
 	protected Stage stage;
