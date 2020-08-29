@@ -2,28 +2,22 @@ package com.mafarawa.controller.authreg;
 
 import com.mafarawa.App;
 import com.mafarawa.connect.DBGate;
-import com.mafarawa.controller.authreg.AuthorizationController;
 import com.mafarawa.model.SelectScene;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.view.authreg.SelectUserView;
 
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import org.apache.log4j.Logger;
 
 public class SelectUserController extends SelectUserView {
 	private ArrayList<UserModel> users;
 	private ArrayList<AuthorizationController> authDialogs;
 	
-	private static DBGate dbGate;
 	private static Logger logger;
-
-	static {
-		dbGate = DBGate.getInstance();
-		logger = Logger.getLogger(SelectUserController.class.getName());
-	}
+	static { logger = Logger.getLogger(SelectUserController.class.getName()); }
 
 	public SelectUserController(Stage stage) {
 		super();
@@ -54,6 +48,8 @@ public class SelectUserController extends SelectUserView {
 
 	// This method used to execute users in order to display them
 	private void getUsersToDisplay() {
+		DBGate dbGate = DBGate.getInstance();
+
 		try {
 			ResultSet rs = dbGate.executeData("SELECT userfp.name, userfp.email, userfp.password, user_image.image_path FROM userfp JOIN user_image ON user_image.id = userfp.image;");
 			while(rs.next()) {

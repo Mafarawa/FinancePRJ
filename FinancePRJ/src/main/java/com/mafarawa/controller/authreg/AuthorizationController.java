@@ -1,35 +1,18 @@
 package com.mafarawa.controller.authreg;
 
 import com.mafarawa.view.authreg.AuthorizationView;
-import com.mafarawa.controller.authreg.DropPasswordController;
 import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
-import com.mafarawa.model.SelectScene;
-import com.mafarawa.view.main.MainWindow;
-import com.mafarawa.App;
+import com.mafarawa.view.MainWindow;
 
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 public class AuthorizationController extends AuthorizationView {
-    private static DBGate dbGate;
     private static Logger logger;
-
-    static {
-        dbGate = DBGate.getInstance();
-        logger = Logger.getLogger(AuthorizationController.class.getName());
-    }
+    static { logger = Logger.getLogger(AuthorizationController.class.getName()); }
 
     public AuthorizationController(Stage stage, UserModel user) {
     	super(stage);
@@ -48,9 +31,10 @@ public class AuthorizationController extends AuthorizationView {
 
     // This method used to check if the password that user entered is forge
     private void authorizeUser(String username, Stage stage) {
+        DBGate dbGate = DBGate.getInstance();
+
         // Hashing password that user entered to compare it with hash which contains in database
         String passwordInputValue = Integer.toHexString(super.passwordInput.getText().hashCode());
-
         logger.debug("User: " + username + " try to authorize with hash: " + passwordInputValue);
 
         try {

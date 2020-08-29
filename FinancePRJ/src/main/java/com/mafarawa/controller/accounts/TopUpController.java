@@ -1,6 +1,6 @@
-package com.mafarawa.controller.main;
+package com.mafarawa.controller.accounts;
 
-import com.mafarawa.view.main.TopUpView;
+import com.mafarawa.view.accounts.TopUpView;
 import com.mafarawa.connect.DBGate;
 
 import javafx.stage.WindowEvent;

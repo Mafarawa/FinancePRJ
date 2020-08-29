@@ -1,22 +1,15 @@
-package com.mafarawa.controller.main;
+package com.mafarawa.controller.accounts;
 
-import com.mafarawa.view.main.AccountView;
+import com.mafarawa.view.accounts.AccountView;
 import com.mafarawa.model.AccountModel;
-import com.mafarawa.model.AccountType;
 import com.mafarawa.connect.DBGate;
-import com.mafarawa.controller.main.TopUpController;
-import com.mafarawa.controller.main.AddAccountController;
-import com.mafarawa.controller.main.DebitAccountController;
-import com.mafarawa.controller.main.RemoveAccountController;
-import com.mafarawa.controller.main.EditAccountController;
 
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
-import java.util.ArrayList;
+
 import java.sql.*;
 import org.apache.log4j.Logger;
 

@@ -1,6 +1,6 @@
-package com.mafarawa.controller.main;
+package com.mafarawa.controller.accounts;
 
-import com.mafarawa.view.main.DebitAccountView;
+import com.mafarawa.view.accounts.DebitAccountView;
 import com.mafarawa.connect.DBGate;
 
 import javafx.stage.WindowEvent;

@@ -7,8 +7,7 @@ import com.mafarawa.model.UserModel;
 import com.mafarawa.model.UserImage;
 import com.mafarawa.model.AccountType;
 import com.mafarawa.view.authreg.RegistrationView;
-import com.mafarawa.controller.authreg.SelectImageController;
-import com.mafarawa.view.main.MainWindow;
+import com.mafarawa.view.MainWindow;
 
 import javafx.stage.Stage;
 import java.sql.PreparedStatement;
@@ -18,13 +17,8 @@ import org.apache.log4j.Logger;
 public class RegistrationController extends RegistrationView {
 	private SelectImageController sic;
 	
-	private static DBGate dbGate;
 	private static Logger logger;
-
-	static {
-		dbGate = DBGate.getInstance();
-		logger = Logger.getLogger(RegistrationController.class.getName());
-	}
+	static { logger = Logger.getLogger(RegistrationController.class.getName()); }
 
 	public RegistrationController(Stage stage) {
 		super();
@@ -38,6 +32,7 @@ public class RegistrationController extends RegistrationView {
 
 	// This method used to register default expance categories
 	private void registerCategories(int user_id) {
+		DBGate dbGate = DBGate.getInstance();
 		logger.debug("Registering default expance categories...");
 
 		try {
@@ -57,6 +52,7 @@ public class RegistrationController extends RegistrationView {
 
 	// This method used to register default accounts
 	private void registerAccounts(int user_id) {
+		DBGate dbGate = DBGate.getInstance();
 		logger.debug("Registering default accounts...");
 
 		try {
@@ -69,6 +65,8 @@ public class RegistrationController extends RegistrationView {
 
 	// This method used to register user
 	private void registerUser(Stage stage) {
+		DBGate dbGate = DBGate.getInstance();
+
 		String username = super.usernameInput.getText();
 		String email = super.emailInput.getText();
 		String password = Integer.toHexString(super.passwordInput.getText().hashCode()); // Hashing password

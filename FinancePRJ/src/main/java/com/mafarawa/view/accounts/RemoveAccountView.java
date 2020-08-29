@@ -1,4 +1,4 @@
-package com.mafarawa.view.main;
+package com.mafarawa.view.accounts;
 
 import javafx.stage.Stage;
 import javafx.scene.Scene;

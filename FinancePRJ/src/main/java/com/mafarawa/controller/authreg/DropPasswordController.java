@@ -4,51 +4,33 @@ import com.mafarawa.connect.DBGate;
 import com.mafarawa.model.UserModel;
 import com.mafarawa.view.authreg.DropPasswordView;
 
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
+import org.apache.log4j.Logger;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Message;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.AddressException;
-import javax.mail.MessagingException;
-import java.lang.Runnable;
-import org.apache.log4j.Logger;
 
 public class DropPasswordController extends DropPasswordView {
     private boolean permission;
-    private int valueInput;	
-    private Runnable sendEmailThread;
+    private int valueInput;
 
-    private static DBGate dbGate;
     private static Logger logger;
-
-    static {
-        dbGate = DBGate.getInstance();
-        logger = Logger.getLogger(DropPasswordController.class.getName());
-    }
+    static { logger = Logger.getLogger(DropPasswordController.class.getName()); }
 
 	public DropPasswordController(Stage stage, UserModel user) {
 		super(stage);
 
         // Message sending through second thread
-        sendEmailThread = () -> { sendEmail(user.getName()); };
+        Runnable sendEmailThread = () -> sendEmail(user.getName());
         new Thread(sendEmailThread).start();
 
         super.shukherCodeInput.setOnKeyReleased(e -> {
@@ -65,9 +47,11 @@ public class DropPasswordController extends DropPasswordView {
 
     // This method used to send a message to users email which contains a shukher code
     private void sendEmail(String name) {
+        DBGate dbGate = DBGate.getInstance();
+
         String shukherCode = "";
         String to = "";
-        String from = "financeprjnoreply@gmail.com"; 
+        String from = "financeprjnoreply@gmail.com";
         String host = "smtp.gmail.com";
         String port = "465";
 
@@ -111,17 +95,15 @@ public class DropPasswordController extends DropPasswordView {
             // LIFT OFF!
             Transport.send(message);
             logger.info("Message was transported");
-        } catch(AddressException ae) {
+        } catch(MessagingException | SQLException ae) {
             logger.error("Exception: ", ae);
-        } catch(MessagingException me) {
-            logger.error("Exception: ", me);
-        } catch(SQLException sqle) {
-            logger.error("Exception: ", sqle);
         }
     }
 
     // This method used to drop password 
     private void dropPassword(int valueInput, UserModel user) {
+        DBGate dbGate = DBGate.getInstance();
+
         String password1 = Integer.toHexString(super.passwordInput.getText().hashCode());
         String password2 = Integer.toHexString(super.confirmPasswordInput.getText().hashCode());
 
@@ -152,6 +134,8 @@ public class DropPasswordController extends DropPasswordView {
 
     // This method used to check shukher code that user typed with shukher code which contains in the database
     private boolean checkShukherCode(int value, String name) {
+        DBGate dbGate = DBGate.getInstance();
+
         try {
             ResultSet rs = dbGate.executeData("SELECT userfp.name FROM userfp WHERE shukher_code=" + value + ";");
             while(rs.next()) {

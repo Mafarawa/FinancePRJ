@@ -1,23 +1,15 @@
-package com.mafarawa.controller.main;
+package com.mafarawa.controller.accounts;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.geometry.Pos;
+
 import java.sql.*;
 import org.apache.log4j.Logger;
 
 import com.mafarawa.model.AccountType;
 import com.mafarawa.connect.DBGate;
-import com.mafarawa.view.main.EditAccountView;
+import com.mafarawa.view.accounts.EditAccountView;
 
 public class EditAccountController extends EditAccountView {
 	private String accountName;
