@@ -1,7 +1,5 @@
 package com.mafarawa.model;
 
-import com.mafarawa.model.AccountModel;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;

@@ -21,10 +21,6 @@ public class AccountModel {
 	public String getAccountType() { return this.accountType; }
 	public int getAccountBalance() { return this.accountBalance; }
 
-	public void setAccountName(String accountName) { this.accountName = accountName; }
-	public void setAccountType(String accountType) { this.accountType = accountType; }
-	public void setAccountBalance(int accountBalance) { this.accountBalance = accountBalance; }
-
 	@Override
 	public String toString() {
 		return this.accountName;

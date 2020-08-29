@@ -1,7 +1,6 @@
 package com.mafarawa.view.main;
 
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
