@@ -108,14 +108,11 @@ public class EditAccountController extends EditAccountView {
 	// This method checking can this input be inserted into the database
 	private boolean checkInputs() {
 		String accountName = super.accountNameInput.getText();
-		String accountType = super.accountTypeBox.getValue();
 		String accountBalance = super.accountBalanceInput.getText();
 
 		// Check if inputs are empty
-		if(super.accountNameInput.getText() == null || 
-		   super.accountNameInput.getText().trim().isEmpty() ||
-		   super.accountBalanceInput.getText() == null ||
-		   super.accountBalanceInput.getText().trim().isEmpty()) {
+		if(accountName == null || accountName.trim().isEmpty() ||
+		   accountBalance == null || accountBalance.trim().isEmpty()) {
 			super.checkLabel.setText("Заполните все поля!");
 			return false;
 		}		
