@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
-
 import java.sql.*;
 import org.apache.log4j.Logger;
 
