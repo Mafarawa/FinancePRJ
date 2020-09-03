@@ -9,6 +9,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
@@ -27,6 +28,8 @@ public class TopUpView {
 	protected TextField accountInput;
 	protected DatePicker incomeDatePicker;
 	protected DatePicker accountDatePicker;
+	protected Label incomeCheckLabel;
+	protected Label accountCheckLabel;
 	protected Scene scene;
 	protected Stage childStage;
 
@@ -35,6 +38,8 @@ public class TopUpView {
 		incomeInput = new TextField();
 		incomeDoneButton = new Button("Перевести");
 		incomeDatePicker = new DatePicker(LocalDate.now());
+		incomeCheckLabel = new Label();
+		accountCheckLabel = new Label();
 
 		incomeList.setPrefHeight(150);
 		incomeInput.setPromptText("Сумма");
@@ -42,7 +47,7 @@ public class TopUpView {
 		VBox incomeLayout = new VBox(10);
 		incomeLayout.setPadding(new Insets(10, 10, 10, 10));	
 		incomeLayout.setAlignment(Pos.CENTER);
-		incomeLayout.getChildren().addAll(incomeList, incomeInput, incomeDatePicker, incomeDoneButton);
+		incomeLayout.getChildren().addAll(incomeList, incomeInput, incomeDatePicker, incomeCheckLabel, incomeDoneButton);
 
 		incomeTab = new Tab("С Дохода", incomeLayout);
 
@@ -57,7 +62,7 @@ public class TopUpView {
 		VBox accountLayout = new VBox(10);
 		accountLayout.setPadding(new Insets(10, 10, 10, 10));	
 		accountLayout.setAlignment(Pos.CENTER);
-		accountLayout.getChildren().addAll(accountList, accountInput, accountDatePicker, accountDoneButton);
+		accountLayout.getChildren().addAll(accountList, accountInput, accountDatePicker, accountCheckLabel, accountDoneButton);
 
 		accountTab = new Tab("Со Счета", accountLayout);
 
