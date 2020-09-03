@@ -31,12 +31,11 @@ public class EditAccountView {
 		accountNameLabel = new Label("Название счета:");
 		accountTypeLabel = new Label("Тип счета:");
 		accountBalanceLabel = new Label("Баланс на счету:");
-
-		checkLabel = new Label();
-		checkLabel.setAlignment(Pos.CENTER);
-
 		accountNameInput = new TextField();
 		accountBalanceInput = new TextField();
+		checkLabel = new Label();
+
+		checkLabel.setAlignment(Pos.CENTER);
 
 		AccountType[] accountTypes = AccountType.values();
 		accountTypeBox = new ComboBox<>();
