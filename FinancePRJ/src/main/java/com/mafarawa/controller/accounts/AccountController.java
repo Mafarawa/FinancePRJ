@@ -26,6 +26,8 @@ public class AccountController extends AccountView {
 	public AccountController(Stage stage, String name) {
 		super();
 
+		stage.setTitle("FinancePRJ | " + name);
+
 		AddAccountController aac = new AddAccountController(stage, name);
 		aac.getStage().setOnCloseRequest(e -> getUserAccountsList(name));
 		super.addAccount.setOnAction(e -> aac.getStage().show());
