@@ -12,16 +12,22 @@ import com.mafarawa.connect.DBGate;
 import com.mafarawa.view.accounts.AddAccountView;
 
 public class AddAccountController extends AddAccountView {
-	private static DBGate dbGate;
-    private static Logger logger;
+    private int id;
 
-    static {
-    	dbGate = DBGate.getInstance();
-    	logger = Logger.getLogger(AddAccountController.class.getName());
-    }
+    private static Logger logger;
+    static { logger = Logger.getLogger(AddAccountController.class.getName()); }
 
 	public AddAccountController(Stage stage, String name) {
 		super(stage);
+
+		DBGate dbGate = DBGate.getInstance();
+		try {
+			ResultSet rs = dbGate.executeData("select userfp.id from userfp where name = '" + name + "';");
+			rs.next();
+			id = rs.getInt(1);
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
 
         super.cancelButton.setOnAction(e -> {
         	super.accountNameInput.clear();
@@ -37,15 +43,12 @@ public class AddAccountController extends AddAccountView {
 		String accountName = super.accountNameInput.getText();
 		String accountType = super.accountTypeBox.getValue();
 		String accountBalance = super.accountBalanceInput.getText();
+		DBGate dbGate = DBGate.getInstance();
 
 		if(checkInputs()) {
 			try {
-				ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE userfp.name='" + name + "';");
-				rs.next();
-				int userfp_id = rs.getInt("id");
-
 				dbGate.insertData("INSERT INTO account(account_id, name, type_id, balance) VALUES(" + 
-					userfp_id + ", '" + accountName + "', " + AccountType.getIdByType(accountType) + ", " + accountBalance + ");");
+					id + ", '" + accountName + "', " + AccountType.getIdByType(accountType) + ", " + accountBalance + ");");
 
 				super.accountNameInput.clear();
 				super.accountBalanceInput.clear();
@@ -62,6 +65,7 @@ public class AddAccountController extends AddAccountView {
 		String accountName = super.accountNameInput.getText();
 		String accountType = super.accountTypeBox.getValue();
 		String accountBalance = super.accountBalanceInput.getText();
+		DBGate dbGate = DBGate.getInstance();
 
 		// Check if inputs are empty
 		if(super.accountNameInput.getText() == null || 
@@ -74,7 +78,7 @@ public class AddAccountController extends AddAccountView {
 
 		// Checking account name
 		try {
-			ResultSet rs = dbGate.executeData("SELECT EXISTS(SELECT 1 FROM account WHERE name = '" + accountName + "');");
+			ResultSet rs = dbGate.executeData("SELECT EXISTS(SELECT 1 FROM account WHERE name = '" + accountName + "' and account_id = " + this.id + ");");
 			while(rs.next()) {
 				if(rs.getBoolean("exists") == true) {
 					super.checkLabel.setText("Счет с таким именем уже существует!");
