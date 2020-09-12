@@ -8,6 +8,7 @@ com/mafarawa/controller/authreg/SelectUserController.class
 com/mafarawa/view/authreg/AuthorizationView.class
 com/mafarawa/controller/authreg/SelectImageController.class
 com/mafarawa/view/authreg/SelectUserView.class
+com/mafarawa/controller/history/TransactionHistoryController.class
 com/mafarawa/controller/authreg/DropPasswordController$1.class
 com/mafarawa/view/authreg/SelectImageView.class
 com/mafarawa/connect/DBGate.class
@@ -16,3 +17,4 @@ com/mafarawa/model/SelectScene.class
 com/mafarawa/view/authreg/RegistrationView.class
 com/mafarawa/model/UserImage.class
 com/mafarawa/controller/authreg/RegistrationController.class
+com/mafarawa/model/TransactionModel.class
