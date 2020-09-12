@@ -6,14 +6,15 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 
 import com.mafarawa.controller.accounts.AccountController;
+import com.mafarawa.controller.history.TransactionHistoryController;
 
 public class MainWindow {
 	protected Stage stage;
 	protected Scene scene;
 	protected TabPane tabPane;
 	protected Tab accountTab;
-	protected Tab sada;
-	protected Tab gasf;
+	protected Tab expancesTab;
+	protected Tab transactionsTab;
 	protected static String name;
 
 	public MainWindow(Stage stage, String name) {
@@ -21,14 +22,14 @@ public class MainWindow {
 		this.name = name;
 
 		accountTab = new Tab("Счета", new AccountController(stage, name).getLayout());
-		sada = new Tab("Расходы");
-		gasf = new Tab("Операции");
+		transactionsTab = new Tab("Операции", new TransactionHistoryController(stage, name).getLayout());
+		expancesTab = new Tab("Расходы");
 
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		tabPane.getTabs().add(accountTab);
-		tabPane.getTabs().add(sada);
-		tabPane.getTabs().add(gasf);
+		tabPane.getTabs().add(expancesTab);
+		tabPane.getTabs().add(transactionsTab);
 
 		scene = new Scene(tabPane, 1000, 600);		
 	}
