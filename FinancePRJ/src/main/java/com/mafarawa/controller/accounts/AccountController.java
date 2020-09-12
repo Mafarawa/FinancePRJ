@@ -37,12 +37,24 @@ public class AccountController extends AccountView {
 		getUserAccountsList(name);
 		super.accountList.setItems(accountListData);
 
+		removeAccount.setDisable(true);
+		editAccount.setDisable(true);
+		topUpButton.setDisable(true);
+		debitFromButton.setDisable(true);
+
 		// Listener
 		super.accountList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AccountModel>() {
 			@Override
 			public void changed(ObservableValue<? extends AccountModel> observable,
 								AccountModel oldValue, AccountModel newValue) {
 				try {
+					removeAccount.setDisable(false);
+					editAccount.setDisable(false);
+					topUpButton.setDisable(false);
+					debitFromButton.setDisable(false);						
+
+					logger.debug("Selected item: " + oldValue + ", " + newValue);
+
 					// Displaing account data
 					accountNameValue.setText(newValue.getAccountName());
 					accountTypeValue.setText(newValue.getAccountType());
