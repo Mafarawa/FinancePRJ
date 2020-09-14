@@ -39,7 +39,6 @@ public class RegistrationController extends RegistrationView {
 			dbGate.insertData("INSERT INTO income(income_id, category) VALUES(" + user_id + ", 'Зарплата');");
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Продукты');");
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Здоровье');");
-			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Продукты');");
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Кафе');");
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Досуг');");
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Транспорт');");
