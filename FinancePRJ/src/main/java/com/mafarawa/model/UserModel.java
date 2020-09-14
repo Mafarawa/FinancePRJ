@@ -34,8 +34,6 @@ public class UserModel implements Cloneable {
 		this.password = password;
 		this.imageName = image;
 		this.shukherCode = createShukherCode(name, email, password);
-
-		logger.debug("New UserModel: " + this.toString());
 	}
 
 	// This method used to create shukher code
@@ -82,15 +80,12 @@ public class UserModel implements Cloneable {
 			res = res.substring(0, 6);
 		}
 
-		logger.debug("Total ShukherCode is: " + Integer.parseInt(res));
-
 		return Integer.parseInt(res);
 	}
 
 	public Button cloneUserAvatar() {
 		Button avatar = new Button(this.name, new ImageView(new Image(getClass().getResourceAsStream(this.imageName), 100, 100, false, false)));
 		avatar.setContentDisplay(ContentDisplay.TOP);
-		logger.info("UserAvatar clone created");
 		
 		return avatar;
 	}
