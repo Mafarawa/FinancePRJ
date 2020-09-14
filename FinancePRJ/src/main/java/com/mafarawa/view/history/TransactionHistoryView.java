@@ -15,18 +15,20 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import com.mafarawa.model.TransactionModel;
+import com.mafarawa.model.AccountModel;
 
 public class TransactionHistoryView {
 	protected Button performChangesButton;
 	protected Button deleteTransactionButton;
 	protected Button cancelButton;
-	protected ListView<String> accountList;
+	protected ListView<AccountModel> accountList;
 	protected ListView<String> categoryList;
 	protected TableView<TransactionModel> tableView;
 	protected TableColumn<TransactionModel, String> fromPointColumn;
 	protected TableColumn<TransactionModel, String> actionColumn;
 	protected TableColumn<TransactionModel, Integer> amountColumn;
 	protected TableColumn<TransactionModel, String> toPointColumn;
+	protected TableColumn<TransactionModel, String> dateColumn;
 	protected SplitPane splitPane;
 	protected Scene scene;
 
@@ -44,13 +46,15 @@ public class TransactionHistoryView {
 		actionColumn = new TableColumn<>("Действие");
 		amountColumn = new TableColumn<>("Сумма");
 		toPointColumn = new TableColumn<>("На");
+		dateColumn = new TableColumn<>("Дата транзакции");
 
 		fromPointColumn.setCellValueFactory(new PropertyValueFactory<TransactionModel, String>("fromPoint"));
 		actionColumn.setCellValueFactory(new PropertyValueFactory<TransactionModel, String>("action"));
 		amountColumn.setCellValueFactory(new PropertyValueFactory<TransactionModel, Integer>("amount"));
 		toPointColumn.setCellValueFactory(new PropertyValueFactory<TransactionModel, String>("toPoint"));
+		dateColumn.setCellValueFactory(new PropertyValueFactory<TransactionModel, String>("date"));
 
-		tableView.getColumns().addAll(fromPointColumn, actionColumn, amountColumn, toPointColumn);
+		tableView.getColumns().addAll(fromPointColumn, actionColumn, amountColumn, toPointColumn, dateColumn);
 
 		VBox listLayout = new VBox(10);
 		listLayout.getChildren().addAll(accountList, categoryList);
@@ -63,6 +67,7 @@ public class TransactionHistoryView {
 		tableLayout.getChildren().addAll(tableView, buttonLayout);
 
 		splitPane = new SplitPane(listLayout, tableLayout);
+		splitPane.setDividerPositions(0.3);
 
 		scene = new Scene(splitPane, 1000, 600);
 	}
