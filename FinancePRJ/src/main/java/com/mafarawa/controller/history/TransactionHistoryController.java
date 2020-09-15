@@ -50,8 +50,9 @@ public class TransactionHistoryController extends TransactionHistoryView {
 	}
 
 	private void getTransactionData(String name) {
-		DBGate dbGate = DBGate.getInstance();
+		super.tableView.getItems().clear();
 
+		DBGate dbGate = DBGate.getInstance();
 		try {
 			// Executing account data
 			ResultSet rs = dbGate.executeData("SELECT transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
