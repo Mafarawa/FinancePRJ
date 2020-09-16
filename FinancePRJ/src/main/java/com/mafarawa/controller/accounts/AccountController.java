@@ -9,8 +9,11 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import java.sql.*;
 import org.apache.log4j.Logger;
+import java.util.Optional;
 
 public class AccountController extends AccountView {
 	private ObservableList<AccountModel> accountListData;
@@ -60,17 +63,19 @@ public class AccountController extends AccountView {
 					accountTypeValue.setText(newValue.getAccountType());
 					accountBalanceValue.setText(String.valueOf(newValue.getAccountBalance()));
 
-					// This controller used to remove selected account
-					RemoveAccountController rac = new RemoveAccountController(stage, newValue.getAccountName());
-					rac.getStage().setOnCloseRequest(r -> {
-						getUserAccountsList(name);
-						accountNameValue.setText("");							
-						accountTypeValue.setText("");							
-						accountBalanceValue.setText("");							
-						accountList.getSelectionModel().select(0);	
+					// I replaced my removeAccountController by this
+					Alert removeAccountAlert = new Alert(Alert.AlertType.CONFIRMATION);
+					removeAccountAlert.setTitle("Удалить счет");
+					removeAccountAlert.setHeaderText("Удалить счет " + newValue + "?");
+					removeAccount.setOnAction(r -> {
+						Optional<ButtonType> choice = removeAccountAlert.showAndWait();
+						if(choice.get() == ButtonType.OK) {
+							deleteAccount(newValue.toString());
+							getUserAccountsList(name);
+							accountList.getSelectionModel().select(0);
+						}
 					});
 
-					removeAccount.setOnAction(r -> rac.getStage().show());
 
 					// This controller used to edit data of selected account 
 					EditAccountController eac = new EditAccountController(stage, newValue.getAccountName());
@@ -102,6 +107,17 @@ public class AccountController extends AccountView {
 				} catch(NullPointerException npe) {}
 			}
 		});
+	}
+
+	// This method used to delete selected account
+	private void deleteAccount(String accountName) {
+		DBGate dbGate = DBGate.getInstance();
+
+		try {
+			dbGate.insertData("DELETE FROM account WHERE name='" + accountName + "';");
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
 	}
 
 	// This method used to execute user accounts from database 
