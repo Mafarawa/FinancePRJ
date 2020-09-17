@@ -124,8 +124,10 @@ public class DropPasswordController extends DropPasswordView {
                 dbGate.insertData(statement);
             } catch(Exception e) {
                 logger.error("Exception: ", e);
+                try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
             }
 
+            try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
             logger.info("Password changed");
 
             super.childStage.close();
