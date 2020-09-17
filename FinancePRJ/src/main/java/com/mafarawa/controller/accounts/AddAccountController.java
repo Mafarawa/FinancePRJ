@@ -56,7 +56,10 @@ public class AddAccountController extends AddAccountView {
 			} catch(SQLException e) {
 				super.checkLabel.setText("Счет с именем '" + accountName + "' уже существует");
 				logger.error("Exception: ", e);
+				try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
 			}
+
+			try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
 		}
 	}
 
