@@ -4,7 +4,11 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
-
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ChangeListener;
+import org.apache.log4j.Logger;
 import com.mafarawa.controller.accounts.AccountController;
 import com.mafarawa.controller.history.TransactionHistoryController;
 
@@ -16,20 +20,32 @@ public class MainWindow {
 	protected Tab expancesTab;
 	protected Tab transactionsTab;
 	protected static String name;
+	private static Logger logger;
+	static { logger = Logger.getLogger(MainWindow.class.getName()); }
 
 	public MainWindow(Stage stage, String name) {
 		this.stage = stage;
 		this.name = name;
 
-		accountTab = new Tab("Счета", new AccountController(stage, name).getLayout());
-		transactionsTab = new Tab("Операции", new TransactionHistoryController(stage, name).getLayout());
-		expancesTab = new Tab("Расходы");
+		AccountController accountController = new AccountController(stage, name);
+		TransactionHistoryController transactionHistoryController = new TransactionHistoryController(stage, name);
+
+		Tab accountTab = new Tab("Счета", accountController.getLayout());
+		Tab transactionsTab = new Tab("Операции", transactionHistoryController.getLayout());
 
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		tabPane.getTabs().add(accountTab);
-		tabPane.getTabs().add(expancesTab);
 		tabPane.getTabs().add(transactionsTab);
+
+		tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+				if(newTab.equals(transactionsTab)) {
+					transactionHistoryController.getAccountData();
+				}
+			}
+		});
 
 		scene = new Scene(tabPane, 1000, 600);		
 	}
