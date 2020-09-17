@@ -33,9 +33,9 @@ public class TransactionHistoryView {
 	protected Scene scene;
 
 	public TransactionHistoryView() {
-		performChangesButton = new Button("Применить изминения");
+		performChangesButton = new Button("Применить изменения");
 		deleteTransactionButton = new Button("Удалить транзакцию");
-		cancelButton = new Button("Отменить изминения");
+		cancelButton = new Button("Отменить изменения");
 
 		accountList = new ListView<>();
 		categoryList = new ListView<>();
