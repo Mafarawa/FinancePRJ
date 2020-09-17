@@ -37,19 +37,19 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		}
 
 		transactionData = FXCollections.observableArrayList();
-		getTransactionData(name);
+		getTransactionData();
 		super.tableView.setItems(transactionData);
 
 		accountData = FXCollections.observableArrayList();
-		getAccountData(name);
+		getAccountData();
 		super.accountList.setItems(accountData);
 
 		categoryData = FXCollections.observableArrayList();
-		getCategoryData(name);
+		getCategoryData();
 		super.categoryList.setItems(categoryData);
 	}
 
-	private void getTransactionData(String name) {
+	public void getTransactionData() {
 		super.tableView.getItems().clear();
 
 		DBGate dbGate = DBGate.getInstance();
@@ -59,7 +59,7 @@ public class TransactionHistoryController extends TransactionHistoryView {
 									" FROM transactions " + 
 									" JOIN transaction_actions " + 
 									" ON transactions.action = transaction_actions.id " + 
-									" WHERE transactions.transaction_id = " + userfpId);
+									" WHERE transactions.transaction_id = " + this.userfpId);
 			while(rs.next()) {
 				// Insert accounts to observable list
 				transactionData.add(new TransactionModel(rs.getString("from_point"),
@@ -75,7 +75,7 @@ public class TransactionHistoryController extends TransactionHistoryView {
 	}
 
 	// This method used to execute user accounts from database 
-	private void getAccountData(String name) {
+	public void getAccountData() {
 		super.accountList.getItems().clear();
 
 		DBGate dbGate = DBGate.getInstance();
@@ -84,7 +84,7 @@ public class TransactionHistoryController extends TransactionHistoryView {
 			ResultSet rs = dbGate.executeData("SELECT account.name, account_type.type, account.balance " + 
 											  "FROM account JOIN account_type " + 
 											  "ON account_type.id = account.type_id " + 
-											  "WHERE account.account_id = " + userfpId + ";");
+											  "WHERE account.account_id = " + this.userfpId + ";");
 			while(rs.next()) {
 				// Insert accounts to observable list
 				accountData.add(new AccountModel(rs.getString("name"), rs.getString("type"), rs.getInt("balance")));
@@ -95,15 +95,15 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		}
 	}
 
-	private void getCategoryData(String name) {
+	public void getCategoryData() {
 		super.categoryList.getItems().clear();
 
 		DBGate dbGate = DBGate.getInstance();
 		try {
-			ResultSet rs = dbGate.executeData("SELECT expance.category FROM expance WHERE expance.expance_id = " + userfpId);
+			ResultSet rs = dbGate.executeData("SELECT expance.category FROM expance WHERE expance.expance_id = " + this.userfpId);
 			while(rs.next()) { categoryData.add(rs.getString("category")); }
 
-			rs = dbGate.executeData("SELECT income.category FROM income WHERE income.income_id = " + userfpId);
+			rs = dbGate.executeData("SELECT income.category FROM income WHERE income.income_id = " + this.userfpId);
 			while(rs.next()) { categoryData.add(rs.getString("category")); }
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
