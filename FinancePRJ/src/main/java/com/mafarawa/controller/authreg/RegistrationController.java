@@ -46,7 +46,10 @@ public class RegistrationController extends RegistrationView {
 			dbGate.insertData("INSERT INTO expance(expance_id, category) VALUES(" + user_id + ", 'Покупки');");
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
+			try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
 		}
+
+		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
 	}
 
 	// This method used to register default accounts
