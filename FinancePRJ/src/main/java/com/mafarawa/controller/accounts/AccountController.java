@@ -70,6 +70,9 @@ public class AccountController extends AccountView {
 					removeAccount.setOnAction(r -> {
 						Optional<ButtonType> choice = removeAccountAlert.showAndWait();
 						if(choice.get() == ButtonType.OK) {
+							accountNameValue.setText("");
+							accountTypeValue.setText("");
+							accountBalanceValue.setText("");
 							deleteAccount(newValue.toString());
 							getUserAccountsList(name);
 							accountList.getSelectionModel().select(0);
@@ -109,7 +112,6 @@ public class AccountController extends AccountView {
 		});
 	}
 
-	// This method used to delete selected account
 	private void deleteAccount(String accountName) {
 		DBGate dbGate = DBGate.getInstance();
 
@@ -117,7 +119,10 @@ public class AccountController extends AccountView {
 			dbGate.insertData("DELETE FROM account WHERE name='" + accountName + "';");
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
+			try { dbGate.getDatabase().rollback(); } catch(Exception r) { logger.error("Exception: ", r); }
 		}
+
+		try { dbGate.getDatabase().commit(); } catch(Exception e) { logger.error("Exception: ", e); }
 	}
 
 	// This method used to execute user accounts from database 
