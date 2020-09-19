@@ -18,9 +18,7 @@ import com.mafarawa.model.TransactionModel;
 import com.mafarawa.model.AccountModel;
 
 public class TransactionHistoryView {
-	protected Button performChangesButton;
 	protected Button deleteTransactionButton;
-	protected Button cancelButton;
 	protected ListView<AccountModel> accountList;
 	protected ListView<String> categoryList;
 	protected TableView<TransactionModel> tableView;
@@ -33,9 +31,7 @@ public class TransactionHistoryView {
 	protected Scene scene;
 
 	public TransactionHistoryView() {
-		performChangesButton = new Button("Применить изменения");
 		deleteTransactionButton = new Button("Удалить транзакцию");
-		cancelButton = new Button("Отменить изменения");
 
 		accountList = new ListView<>();
 		categoryList = new ListView<>();
@@ -60,7 +56,7 @@ public class TransactionHistoryView {
 		listLayout.getChildren().addAll(accountList, categoryList);
 
 		HBox buttonLayout = new HBox(10);
-		buttonLayout.getChildren().addAll(performChangesButton, deleteTransactionButton, cancelButton);
+		buttonLayout.getChildren().addAll(deleteTransactionButton);
 		buttonLayout.setAlignment(Pos.CENTER);
 
 		VBox tableLayout = new VBox(100);
