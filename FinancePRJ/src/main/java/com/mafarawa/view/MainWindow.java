@@ -43,6 +43,7 @@ public class MainWindow {
 			public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
 				if(newTab.equals(transactionsTab)) {
 					transactionHistoryController.getAccountData();
+					transactionHistoryController.getTransactionData();
 				}
 			}
 		});
