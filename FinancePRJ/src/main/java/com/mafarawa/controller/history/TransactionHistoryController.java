@@ -47,6 +47,18 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		categoryData = FXCollections.observableArrayList();
 		getCategoryData();
 		super.categoryList.setItems(categoryData);
+
+		super.deleteTransactionButton.setOnAction(e -> {
+			try {
+				dbGate.insertData("DELETE FROM transactions WHERE transactions.id = " + 
+					super.tableView.getSelectionModel().getSelectedItem().getId());
+			} catch(Exception ex) {
+				logger.error("Exception: ", ex);
+			}
+
+			super.tableView.getItems().clear();
+			getTransactionData();
+		});
 	}
 
 	public void getTransactionData() {
@@ -55,14 +67,15 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		DBGate dbGate = DBGate.getInstance();
 		try {
 			// Executing account data
-			ResultSet rs = dbGate.executeData("SELECT transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
+			ResultSet rs = dbGate.executeData("SELECT transactions.id, transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
 									" FROM transactions " + 
 									" JOIN transaction_actions " + 
 									" ON transactions.action = transaction_actions.id " + 
 									" WHERE transactions.transaction_id = " + this.userfpId);
 			while(rs.next()) {
 				// Insert accounts to observable list
-				transactionData.add(new TransactionModel(rs.getString("from_point"),
+				transactionData.add(new TransactionModel(rs.getInt("id"), 
+														 rs.getString("from_point"),
 														 rs.getString("action_name"),
 														 rs.getInt("amount"), 
 														 rs.getString("to_point"),
@@ -74,7 +87,6 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		}
 	}
 
-	// This method used to execute user accounts from database 
 	public void getAccountData() {
 		super.accountList.getItems().clear();
 
@@ -85,8 +97,7 @@ public class TransactionHistoryController extends TransactionHistoryView {
 											  "FROM account JOIN account_type " + 
 											  "ON account_type.id = account.type_id " + 
 											  "WHERE account.account_id = " + this.userfpId + ";");
-			while(rs.next()) {
-				// Insert accounts to observable list
+			while(rs.next()) {	
 				accountData.add(new AccountModel(rs.getString("name"), rs.getString("type"), rs.getInt("balance")));
 			}
 
