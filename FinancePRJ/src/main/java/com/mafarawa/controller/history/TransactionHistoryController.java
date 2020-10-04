@@ -18,6 +18,8 @@ public class TransactionHistoryController extends TransactionHistoryView {
 	private ObservableList<TransactionModel> transactionData;
 	private ObservableList<AccountModel> accountData;
 	private ObservableList<String> categoryData;
+	private String selectedAccount = null;
+	private String selectedCategory = null;
 
 	private static Logger logger;
 	static { logger = Logger.getLogger(TransactionHistoryController.class.getName()); }
@@ -48,6 +50,27 @@ public class TransactionHistoryController extends TransactionHistoryView {
 		getCategoryData();
 		super.categoryList.setItems(categoryData);
 
+		super.accountList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AccountModel>() {
+			@Override
+			public void changed(ObservableValue<? extends AccountModel> observable,
+								AccountModel oldValue, AccountModel newValue) {
+				try {
+					logger.debug("Selected account: " + newValue.toString());
+					getChosenSelectedTransactions(newValue.toString(), selectedCategory);
+				} catch(Exception e) {
+					logger.error("Exception: ", e);
+				}
+			}
+		});
+
+		super.categoryList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+								String oldValue, String newValue) {
+				getChosenSelectedTransactions(selectedAccount, newValue);
+			}
+		});
+
 		super.deleteTransactionButton.setOnAction(e -> {
 			try {
 				dbGate.insertData("DELETE FROM transactions WHERE transactions.id = " + 
@@ -59,6 +82,60 @@ public class TransactionHistoryController extends TransactionHistoryView {
 			super.tableView.getItems().clear();
 			getTransactionData();
 		});
+	}
+
+	private void getChosenSelectedTransactions(String selectedAccount, String selectedCategory) {
+		super.tableView.getItems().clear();
+		this.selectedAccount = selectedAccount;
+		this.selectedCategory = selectedCategory;
+		DBGate dbGate = DBGate.getInstance();
+		ResultSet rs = null;
+
+		if(selectedCategory == null) {
+			try {
+				rs = dbGate.executeData("SELECT transactions.id, transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
+										"FROM transactions JOIN transaction_actions " + 
+										"ON transactions.action = transaction_actions.id " + 
+										"WHERE transactions.transaction_id = " + userfpId + 
+										" AND (transactions.from_point = '" + selectedAccount + "' OR transactions.to_point = '" + selectedAccount + "');");
+			} catch(Exception e) {
+				logger.error("Exception: ", e);
+			}
+		} else if(selectedAccount == null) {
+			try {
+				rs = dbGate.executeData("SELECT transactions.id, transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
+									  	"FROM transactions JOIN transaction_actions " + 
+									  	"ON transactions.action = transaction_actions.id " + 
+									  	"WHERE transactions.transaction_id = " + userfpId + 
+									  	" AND (transactions.from_point = '" + selectedCategory + "' OR transactions.to_point = '" + selectedCategory + "');");
+			} catch(Exception e) {
+				logger.error("Exception: ", e);
+			}			
+		} else {
+			try {
+				rs = dbGate.executeData("SELECT transactions.id, transactions.from_point, transaction_actions.action_name, transactions.amount, transactions.to_point, transactions.transaction_date " + 
+									  	"FROM transactions JOIN transaction_actions " + 
+									  	"ON transactions.action = transaction_actions.id " + 
+									  	"WHERE transactions.transaction_id = " + userfpId + 
+									  	" AND (transactions.from_point = '" + selectedAccount + "' AND transactions.to_point = '" + selectedCategory + "' " + 
+									  	" OR transactions.from_point = '" + selectedCategory + "' AND transactions.to_point = '" + selectedAccount + "');");			
+			} catch(Exception e) {
+				logger.error("Exception: ", e);
+			}
+		}
+
+		try {
+			while(rs.next()) {
+				transactionData.add(new TransactionModel(rs.getInt("id"),
+									rs.getString("from_point"),
+									rs.getString("action_name"),
+									rs.getInt("amount"),
+									rs.getString("to_point"), 
+									rs.getString("transaction_date")));
+			}
+		} catch(Exception e) {
+			logger.error("Exception: ", e);
+		}
 	}
 
 	public void getTransactionData() {
