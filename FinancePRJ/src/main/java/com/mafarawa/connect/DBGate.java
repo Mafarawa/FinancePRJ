@@ -54,7 +54,7 @@ public class DBGate {
 
 		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet rs = statement.executeQuery(query);
-		// logger.debug("ResultSet executed this query: " + query);
+		logger.debug("ResultSet executed this query: " + query);
 
 		return rs;
 	}
@@ -66,7 +66,6 @@ public class DBGate {
 		}
 
 		ps.executeUpdate();
-		// logger.info("PreparedStatement executed");
 	}
 
 	// Insert data
@@ -79,6 +78,5 @@ public class DBGate {
 
 		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		statement.execute(st);
-		// logger.info("Statement executed");
 	}
 }
