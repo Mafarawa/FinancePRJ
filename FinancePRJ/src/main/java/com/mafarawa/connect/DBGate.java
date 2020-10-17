@@ -48,34 +48,21 @@ public class DBGate {
 	
 	// Execute data
 	public ResultSet executeData(String query) throws SQLException {
-		if(database == null) {
-			getDatabase();
-		}
-
+		if(database == null) { getDatabase(); }
 		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet rs = statement.executeQuery(query);
-		logger.debug("ResultSet executed this query: " + query);
-
 		return rs;
 	}
 
 	// Insert data
 	public void insertData(PreparedStatement ps) throws SQLException {
-		if(database == null) {
-			getDatabase();
-		}
-
-		ps.executeUpdate();
+		if(database == null) { getDatabase(); }
+		ps.executeUpdate();	
 	}
 
 	// Insert data
 	public void insertData(String st) throws SQLException {
-		logger.debug("Trying to execute: " + st);
-
-		if(database == null) {
-			getDatabase();
-		}
-
+		if(database == null) { getDatabase(); }
 		Statement statement = database.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		statement.execute(st);
 	}
