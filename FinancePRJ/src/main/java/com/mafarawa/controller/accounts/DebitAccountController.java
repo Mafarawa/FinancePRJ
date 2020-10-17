@@ -30,7 +30,7 @@ public class DebitAccountController extends DebitAccountView {
 		getExpanceList();
 
 		super.childStage.setTitle("Списать со счета " + accountName);
-		super.expanceDoneButton.setOnAction(e -> transactionFromExpance(accountName));
+		super.expanceDoneButton.setOnAction(e -> transactionToExpance(accountName));
 		super.accountDoneButton.setOnAction(e -> transactionFromAccount(accountName));
 	}
 
@@ -75,6 +75,10 @@ public class DebitAccountController extends DebitAccountView {
 		int sum = Integer.parseInt(super.accountInput.getText());
 
 		try {
+			ResultSet rs = dbGate.executeData("SELECT max(current_user_transactions_num) FROM transactions WHERE transactions.transaction_id = " + id + ";");
+			rs.next();
+			int lastNum = rs.getInt(1);
+
 			// Increase balance of selected account
 			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " +
 																					  "SET balance = balance - ? " +
@@ -92,14 +96,15 @@ public class DebitAccountController extends DebitAccountView {
 			dbGate.insertData(accountSubstraction);
 
 			// Document transaction
-			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
-																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date, current_user_transactions_num) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?, ?);");
 			writeTransaction.setInt(1, this.id);
 			writeTransaction.setString(2, accountName);
 			writeTransaction.setInt(3, 2);
 			writeTransaction.setInt(4, sum);
 			writeTransaction.setString(5, target);
 			writeTransaction.setObject(6, super.accountDatePicker.getValue());
+			writeTransaction.setInt(7, lastNum + 1);
 			dbGate.insertData(writeTransaction);
 
 		} catch(Exception e) {
@@ -114,13 +119,17 @@ public class DebitAccountController extends DebitAccountView {
 	}
 
 	// This method used to transfer money from the account to the selected expance category
-	private void transactionFromExpance(String accountName) {
+	private void transactionToExpance(String accountName) {
 		DBGate dbGate = DBGate.getInstance();
 
 		String expance = super.expanceList.getSelectionModel().getSelectedItem();
 		int sum = Integer.parseInt(super.expanceInput.getText());
 
 		try {
+			ResultSet rs = dbGate.executeData("SELECT max(current_user_transactions_num) FROM transactions WHERE transactions.transaction_id = " + id + ";");
+			rs.next();
+			int lastNum = rs.getInt(1);
+
 			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " + 
 																					  "SET balance = balance - ? " + 
 																					  "WHERE name = ?;");
@@ -128,14 +137,15 @@ public class DebitAccountController extends DebitAccountView {
 			accountAddition.setString(2, accountName);
 			dbGate.insertData(accountAddition);
 
-			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
-																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date, current_user_transactions_num) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?, ?);");
 			writeTransaction.setInt(1, this.id);
 			writeTransaction.setString(2, accountName);
 			writeTransaction.setInt(3, 2);
 			writeTransaction.setInt(4, sum);
 			writeTransaction.setString(5, expance);
 			writeTransaction.setObject(6, super.expanceDatePicker.getValue());
+			writeTransaction.setInt(7, lastNum + 1);
 			dbGate.insertData(writeTransaction);
 
 		} catch(Exception e) {

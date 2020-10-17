@@ -77,6 +77,10 @@ public class TopUpController extends TopUpView {
 		int sum = Integer.parseInt(super.accountInput.getText());
 
 		try {
+			ResultSet rs = dbGate.executeData("SELECT max(current_user_transactions_num) FROM transactions WHERE transactions.transaction_id = " + id + ";");
+			rs.next();
+			int lastNum = rs.getInt(1);
+
 			// Increase balance of selected account
 			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " +
 																					  "SET balance = balance + ? " +
@@ -94,14 +98,15 @@ public class TopUpController extends TopUpView {
 			dbGate.insertData(accountSubstraction);
 
 			// Document transaction
-			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
-																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date, current_user_transactions_num) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?, ?);");
 			writeTransaction.setInt(1, this.id);
 			writeTransaction.setString(2, accountName);
 			writeTransaction.setInt(3, 3);
 			writeTransaction.setInt(4, sum);
 			writeTransaction.setString(5, target);
 			writeTransaction.setObject(6, super.accountDatePicker.getValue());
+			writeTransaction.setInt(7, lastNum);
 			dbGate.insertData(writeTransaction);
 
 		} catch(Exception e) {
@@ -123,6 +128,10 @@ public class TopUpController extends TopUpView {
 		int sum = Integer.parseInt(super.incomeInput.getText());
 
 		try {
+			ResultSet rs = dbGate.executeData("SELECT max(current_user_transactions_num) FROM transactions WHERE transactions.transaction_id = " + id + ";");
+			rs.next();
+			int lastNum = rs.getInt(1);
+
 			PreparedStatement accountAddition = dbGate.getDatabase().prepareStatement("UPDATE account " + 
 																					  "SET balance = balance + ? " + 
 																					  "WHERE name = ?;");
@@ -130,14 +139,15 @@ public class TopUpController extends TopUpView {
 			accountAddition.setString(2, accountName);
 			dbGate.insertData(accountAddition);
 
-			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date) " +
-																					   "VALUES (?, ?, ?, ?, ?, ?);");
+			PreparedStatement writeTransaction = dbGate.getDatabase().prepareStatement("INSERT INTO transactions (transaction_id, from_point, action, amount, to_point, transaction_date, current_user_transactions_num) " +
+																					   "VALUES (?, ?, ?, ?, ?, ?, ?);");
 			writeTransaction.setInt(1, this.id);
 			writeTransaction.setString(2, income);
 			writeTransaction.setInt(3, 1);
 			writeTransaction.setInt(4, sum);
 			writeTransaction.setString(5, accountName);
 			writeTransaction.setObject(6, super.accountDatePicker.getValue());
+			writeTransaction.setInt(7, lastNum);
 			dbGate.insertData(writeTransaction);
 
 		} catch(Exception e) {
