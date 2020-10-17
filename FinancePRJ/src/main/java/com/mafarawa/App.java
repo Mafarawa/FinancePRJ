@@ -12,10 +12,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 public class App extends Application {
-    private SelectUserController suc;
-    private RegistrationController ruc;
     private static Map<SelectScene, Scene> scenes;
-
     private static Logger logger;
     static { logger = Logger.getLogger(App.class.getName()); }
 
@@ -25,8 +22,8 @@ public class App extends Application {
 
     public void start(Stage stage) {
         logger.info("===========================|STARTING PROGRAMM...|===========================");
-        suc = new SelectUserController(stage);
-        ruc = new RegistrationController(stage);
+        SelectUserController suc = new SelectUserController(stage);
+        RegistrationController ruc = new RegistrationController(stage);
 
         scenes = new HashMap<>();
         scenes.put(SelectScene.SELECT_USER_SCENE, suc.getScene());
