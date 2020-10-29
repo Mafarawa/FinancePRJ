@@ -19,58 +19,41 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class AnalyseExpancesController extends AnalyseExpancesView {
     private int id;
-    private ObservableList<String> categories;
     private Map<Date, Integer> map;
 
     private static Logger logger;
     static { logger = Logger.getLogger(AnalyseExpancesController.class.getName()); }
 
     public AnalyseExpancesController(Stage stage, String name) {
+        map = new HashMap<>();
 		DBGate dbGate = DBGate.getInstance();
 		try {
 			ResultSet rs = dbGate.executeData("SELECT userfp.id FROM userfp WHERE name = '" + name + "';");
 			rs.next();
 			id = rs.getInt(1);
+
+            rs = dbGate.executeData("SELECT DISTINCT to_point FROM transactions WHERE transaction_id = " + id + " AND EXISTS(SELECT 1 FROM expance WHERE category = to_point);");
+            while(rs.next()) {
+                ResultSet graphs = dbGate.executeData("SELECT transactions.amount, transactions.transaction_date " + 
+                                                      "FROM transactions " +
+                                                      "WHERE transactions.transaction_id = " + id +
+                                                      " AND transactions.to_point = '" + rs.getString("to_point") + "'");
+                while(graphs.next()) {
+                    if(map.containsKey(graphs.getDate(2))) {
+                        map.put(graphs.getDate(2), map.get(graphs.getDate(2)) + graphs.getInt(1));
+                    } else {
+                        map.put(graphs.getDate(2), graphs.getInt(1));
+                    }
+                }
+                
+                displayGraphs(rs.getString("to_point"));
+            }
 		} catch(Exception e) {
 			logger.error("Exception: ", e);
 		}
-
-        map = new HashMap<>();
-
-		categories = FXCollections.observableArrayList();
-		getCategories(id);
-		super.categoryList.setItems(categories);
-
-        super.categoryList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                map.clear();
-                logger.debug("Selected category: " + newValue);
-                try {
-                    ResultSet rs = dbGate.executeData("SELECT transactions.amount, transactions.transaction_date " + 
-                                                      " FROM transactions " + 
-                                                      " WHERE transactions.transaction_id = " + id + 
-                                                      " AND transactions.to_point = '" + newValue + "';");
-
-                    while(rs.next()) {
-                        if(map.containsKey(rs.getDate(2))) {
-                            map.put(rs.getDate(2), map.get(rs.getDate(2)) + rs.getInt(1));
-                        } else {
-                            map.put(rs.getDate(2), rs.getInt(1));
-                        }
-                    }
-
-                    displayGraphs(newValue);
-                } catch(SQLException sqle) {
-                    logger.error("Exception: ", sqle);
-                }
-            }
-        });
     }
 
     private void displayGraphs(String category) {
@@ -81,18 +64,5 @@ public class AnalyseExpancesController extends AnalyseExpancesView {
         }
 
         super.lineChart.getData().add(series);
-    }
-
-    private void getCategories(int id) {
-        DBGate dbGate = DBGate.getInstance();
-
-        try {
-            ResultSet rs = dbGate.executeData("SELECT expance.category FROM expance WHERE expance.expance_id = " + id);
-            while(rs.next()) {
-                categories.add(rs.getString(1));
-            }
-        } catch(SQLException sqle) {
-            logger.error("Exception: ", sqle);
-        }
     }
 }
